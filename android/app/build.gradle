@@ -3,16 +3,49 @@ plugins {
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
+    id("com.google.gms.google-services")
 }
 
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+// def flutterRoot = localProperties.getProperty('flutter.sdk')
+// if (flutterRoot == null) {
+//     throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+// }
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '1'
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.0'
+}
+
+/// will open this code when making release build
+
+// def keystoreProperties = new Properties()
+// def keystorePropertiesFile = rootProject.file('key.properties')
+// if (keystorePropertiesFile.exists()) {
+//     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+// }
+
 android {
-    namespace = "com.content.shorty.shorty"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    namespace = "com.content.shorty"
+    compileSdk = 34
+    // ndkVersion = 26
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled true
     }
 
     kotlinOptions {
@@ -21,13 +54,15 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.content.shorty.shorty"
+        applicationId = "com.content.shorty"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        minSdkVersion 24
+        targetSdkVersion 34
+        multiDexEnabled = true
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+
     }
 
     buildTypes {
@@ -41,4 +76,23 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+  // Import the Firebase BoM
+  implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
+
+
+  // TODO: Add the dependencies for Firebase products you want to use
+  // When using the BoM, don't specify versions in Firebase dependencies
+  implementation("com.google.firebase:firebase-analytics")
+
+
+  // Add the dependencies for any other desired Firebase products
+  // https://firebase.google.com/docs/android/setup#available-libraries
+
+    implementation("androidx.multidex:multidex:2.0.1")
+    implementation 'androidx.window:window:1.0.0'
+    implementation 'androidx.window:window-java:1.0.0'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
 }

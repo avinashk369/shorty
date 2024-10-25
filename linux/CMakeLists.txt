@@ -7,7 +7,7 @@ project(runner LANGUAGES CXX)
 set(BINARY_NAME "shorty")
 # The unique GTK application identifier for this application. See:
 # https://wiki.gnome.org/HowDoI/ChooseApplicationID
-set(APPLICATION_ID "com.content.shorty.shorty")
+set(APPLICATION_ID "com.content.shorty")
 
 # Explicitly opt in to modern CMake behaviors to avoid warnings with recent
 # versions of CMake.

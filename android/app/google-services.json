@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "430178486532",
+    "project_id": "shorty-425f1",
+    "storage_bucket": "shorty-425f1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:430178486532:android:b78d883837ab638fe02851",
+        "android_client_info": {
+          "package_name": "com.content.shorty"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "430178486532-9tlkequ4554l7or9vg5iksft5c6441g5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.content.shorty",
+            "certificate_hash": "c4ccf3649e4b12965c3da2ea5f65d9186d26b88c"
+          }
+        },
+        {
+          "client_id": "430178486532-bd5ci59uiraaolt8a7g0kfucr2b3tioc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_2I8a0aArmERiNVvn2iRjri9n5RTYXfo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "430178486532-bd5ci59uiraaolt8a7g0kfucr2b3tioc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
