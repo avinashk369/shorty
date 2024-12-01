@@ -4,17 +4,15 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shorty/models/prompt/prompt_model.dart';
 import 'package:shorty/models/content/content_model.dart';
+import 'package:shorty/models/prompt/prompt_model.dart';
 import 'package:shorty/resources/twitter/twitter_repositoryImpl.dart';
 import 'package:shorty/shared/extensions/widget_modifier.dart';
-import 'package:shorty/shared/social_card/social_card.dart';
 import 'package:shorty/shared/utils/draggable_bottom_sheet.dart';
 import 'package:shorty/shared/utils/social_media_enums.dart';
 import 'package:shorty/shared/utils/utils.dart';
 import 'package:shorty/shared/widgets/chat_input.dart';
 import 'package:shorty/shared/widgets/custom_input.dart';
-import 'package:shorty/shared/widgets/loading_ui.dart';
 import 'package:shorty/views/dashboard/pages/content_banner.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -31,11 +29,15 @@ class ContentGenerator extends StatefulWidget {
 class _ContentGeneratorState extends State<ContentGenerator> {
   late PromptModel promptModel;
   late TextEditingController promptController;
+  late TextEditingController hashTagController;
+  late TextEditingController contentController;
 
   @override
   void initState() {
     super.initState();
     promptController = TextEditingController();
+    hashTagController = TextEditingController();
+    contentController = TextEditingController();
     promptModel = PromptModel.fromJson(jsonDecode(FirebaseRemoteConfig.instance
         .getString(StringsConstants.samplePrompt)));
   }
@@ -64,16 +66,13 @@ class _ContentGeneratorState extends State<ContentGenerator> {
                       builder: (context, state) {
                     return state.maybeMap(
                       // loading: (value) => const LoadingUI(),
-                      generatedTweets: (value) => ContentBanner(contents: [
-                        ...value.generatedTweet
-                            .map((contents) => ContentModel(content: contents))
-                      ], source: widget.socialMediaEnums),
-                      orElse: () => SocialCardFactory.buildCard(
-                        context: context,
-                        handleName: widget.socialMediaEnums,
-                        content: StringsConstants.ytTitle,
+                      generatedTweets: (value) => ContentBanner(
+                        contents: [
+                          ...value.generatedTweet.map(
+                              (contents) => ContentModel(content: contents))
+                        ],
+                        source: widget.socialMediaEnums,
                         onShare: (content) async {
-                          print("clicked here");
                           if (StringsConstants
                               .shareEnable[widget.socialMediaEnums]) {
                             String testUrl =
@@ -83,11 +82,33 @@ class _ContentGeneratorState extends State<ContentGenerator> {
                             await Clipboard.setData(
                                 ClipboardData(text: content));
                             if (!context.mounted) return;
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(SnackBar(content: Text(content)));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                margin: EdgeInsets.all(8),
+                                elevation: 5,
+                                behavior: SnackBarBehavior.floating,
+                                content: Text(
+                                  textAlign: TextAlign.center,
+                                  StringsConstants.copyMsg,
+                                  style: kLabelStyle.copyWith(
+                                    color: secondaryLight,
+                                  ),
+                                ),
+                              ),
+                            );
                           }
                         },
-                        onCopy: (content) {},
+                      ),
+                      orElse: () => ContentBanner(
+                        contents: [
+                          ContentModel(
+                            content: getSamplePrompt(widget.socialMediaEnums)[
+                                Utility.randomIndex(size: 3)],
+                          ),
+                        ],
+                        source: widget.socialMediaEnums,
+                        onShare: (content) {},
+                        showIndicator: false,
                       ),
                     );
                   }),
@@ -107,12 +128,19 @@ class _ContentGeneratorState extends State<ContentGenerator> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       const Spacer(),
-                      BlocBuilder<TwitterBloc, TwitterState>(
+                      BlocConsumer<TwitterBloc, TwitterState>(
+                          listenWhen: (previous, current) =>
+                              current is GeneratedTweets,
+                          listener: (context, state) => state.mapOrNull(
+                                generatedTweets: (value) =>
+                                    promptController.clear(),
+                              ),
                           buildWhen: (previous, current) =>
                               current is GeneratedTweets,
                           builder: (context, state) {
                             return state.maybeMap(
-                              generatedTweets: (value) => userInput(),
+                              generatedTweets: (value) =>
+                                  userInput(value.userInput),
                               orElse: () => const SizedBox.shrink(),
                             );
                           }),
@@ -137,38 +165,39 @@ class _ContentGeneratorState extends State<ContentGenerator> {
                       builder: (context, state) => state.maybeMap(
                         loading: (value) => Icon(
                           Icons.stop,
-                          color: darkColor,
+                          color: secondaryLight,
                         ),
                         orElse: () => Icon(
                           Icons.arrow_upward_outlined,
-                          color: darkColor,
+                          color: secondaryLight,
                         ),
                       ),
                     ),
-                    // suffixIcon: Icon(
-                    //   Icons.arrow_upward_rounded,
-                    //   color: darkColor,
-                    // ),
                     onSend: () {
                       if (promptController.text.trim().isNotEmpty) {
                         context.read<TwitterBloc>().add(
                               GenerateTweet(
-                                topic: StringsConstants.topics[
+                                topic: _getPreferenceValue(
+                                    StringsConstants.topics,
                                     PreferenceUtils.getInt(
-                                        StringsConstants.selectedTopic)],
-                                style: StringsConstants.styles[
+                                        StringsConstants.selectedTopic)),
+                                style: _getPreferenceValue(
+                                    StringsConstants.styles,
                                     PreferenceUtils.getInt(
-                                        StringsConstants.selectedStyle)],
-                                persona: StringsConstants.persona[
+                                        StringsConstants.selectedStyle)),
+                                persona: _getPreferenceValue(
+                                    StringsConstants.persona,
                                     PreferenceUtils.getInt(
-                                        StringsConstants.selectedPersona)],
+                                        StringsConstants.selectedPersona)),
                                 userInput: promptController.text,
-                                goal: StringsConstants.goals[
+                                goal: _getPreferenceValue(
+                                    StringsConstants.goals,
                                     PreferenceUtils.getInt(
-                                        StringsConstants.selectedGoal)],
-                                language: StringsConstants.language[
+                                        StringsConstants.selectedGoal)),
+                                language: _getPreferenceValue(
+                                    StringsConstants.language,
                                     PreferenceUtils.getInt(
-                                        StringsConstants.selectedLanguage)],
+                                        StringsConstants.selectedLanguage)),
                               ),
                             );
                       }
@@ -206,9 +235,24 @@ class _ContentGeneratorState extends State<ContentGenerator> {
                                     SizedBox(
                                       width: 100,
                                       child: CustomInput(
-                                          hintText: "2",
-                                          textController:
-                                              TextEditingController()),
+                                        hintText: FirebaseRemoteConfig.instance
+                                            .getInt(
+                                                StringsConstants.maxHashcode)
+                                            .toString(),
+                                        onChanged: (v) {},
+                                        maxLength: 1,
+                                        textInputType: TextInputType.phone,
+                                        focusNode: FocusNode()..hasFocus,
+                                        validator: (p0) =>
+                                            ((int.tryParse(p0 ?? "0") ?? 0) >
+                                                    FirebaseRemoteConfig
+                                                        .instance
+                                                        .getInt(StringsConstants
+                                                            .maxHashcode))
+                                                ? "Max limit exceeded"
+                                                : null,
+                                        textController: hashTagController,
+                                      ),
                                     ),
                                   ],
                                 ).horizontalPadding(10),
@@ -236,9 +280,24 @@ class _ContentGeneratorState extends State<ContentGenerator> {
                                     SizedBox(
                                       width: 100,
                                       child: CustomInput(
-                                          hintText: "140",
-                                          textController:
-                                              TextEditingController()),
+                                          hintText: FirebaseRemoteConfig
+                                              .instance
+                                              .getInt(StringsConstants
+                                                  .maxContentLength)
+                                              .toString(),
+                                          maxLength: 3,
+                                          textInputType: TextInputType.phone,
+                                          focusNode: FocusNode(),
+                                          validator: (p0) => ((int.tryParse(
+                                                          p0 ?? "0") ??
+                                                      0) >
+                                                  FirebaseRemoteConfig.instance
+                                                      .getInt(StringsConstants
+                                                          .maxContentLength))
+                                              ? "Max limit exceeded"
+                                              : null,
+                                          onChanged: (v) {},
+                                          textController: contentController),
                                     ),
                                   ],
                                 ).horizontalPadding(10),
@@ -265,6 +324,20 @@ class _ContentGeneratorState extends State<ContentGenerator> {
                                           borderRadius:
                                               BorderRadius.circular(4)),
                                       onTap: () {
+                                        PreferenceUtils.putInt(
+                                            StringsConstants.maxContentLength,
+                                            int.tryParse(
+                                                    contentController.text) ??
+                                                FirebaseRemoteConfig.instance
+                                                    .getInt(StringsConstants
+                                                        .maxContentLength));
+                                        PreferenceUtils.putInt(
+                                            StringsConstants.maxHashcode,
+                                            int.tryParse(
+                                                    hashTagController.text) ??
+                                                FirebaseRemoteConfig.instance
+                                                    .getInt(StringsConstants
+                                                        .maxHashcode));
                                         promptController.text = getSamplePrompt(
                                             widget.socialMediaEnums)[index];
                                         Navigator.of(context).maybePop();
@@ -296,21 +369,25 @@ class _ContentGeneratorState extends State<ContentGenerator> {
     );
   }
 
+  String _getPreferenceValue(List<String> options, int selectedIndex) {
+    return selectedIndex == -1 ? "" : options[selectedIndex];
+  }
+
   Future<void> _launchUrl(String url) async {
-    final Uri _url = Uri.parse(url);
-    if (!await launchUrl(_url)) {
-      throw Exception('Could not launch $_url');
+    final Uri url0 = Uri.parse(url);
+    if (!await launchUrl(url0)) {
+      throw Exception('Could not launch $url0');
     }
   }
 
-  Widget userInput() => Container(
+  Widget userInput(String userInput) => Container(
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.all(8),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(4)),
             color: darkColor),
         child: Text(
-          promptController.text.trim(),
+          userInput.trim(),
           style: kLabelStyle.copyWith(color: secondaryLight),
         ),
       );

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'dart:math';
 
 class Utility {
@@ -26,8 +25,8 @@ class Utility {
     return double.parse(disc.toStringAsFixed(2));
   }
 
-  static int randomIndex() {
+  static int randomIndex({int size = 10}) {
     final random = Random();
-    return random.nextInt(10);
+    return random.nextInt(size);
   }
 }

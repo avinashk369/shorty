@@ -1,6 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shorty/blocs/twitter/twitterbloc.dart';
 import 'package:shorty/shared/utils/utils.dart';
+import 'package:shorty/shared/widgets/loaders/loader_builder.dart';
+import 'package:shorty/shared/widgets/loaders/loader_enums.dart';
 
 enum TrimMode {
   length,
@@ -10,7 +14,7 @@ enum TrimMode {
 class ReadMoreText extends StatefulWidget {
   const ReadMoreText(
     this.data, {
-    Key? key,
+    super.key,
     this.trimExpandedText = ' read less',
     this.trimCollapsedText = ' ...read more',
     this.colorClickableText,
@@ -23,8 +27,7 @@ class ReadMoreText extends StatefulWidget {
     this.locale,
     this.textScaleFactor,
     this.semanticsLabel,
-  })  : assert(data != null),
-        super(key: key);
+  }) : assert(data != null);
 
   final String? data;
   final String? trimExpandedText;
@@ -131,7 +134,7 @@ class ReadMoreTextState extends State<ReadMoreText> {
           linkLongerThanLine = true;
         }
 
-        var textSpan;
+        TextSpan textSpan;
         switch (widget.trimMode) {
           case TrimMode.length:
             if (widget.trimLength! < widget.data!.length) {
@@ -192,6 +195,16 @@ class ReadMoreTextState extends State<ReadMoreText> {
         ),
       );
     }
-    return result;
+    return BlocBuilder<TwitterBloc, TwitterState>(
+        // buildWhen: (previous, current) => current is GeneratedTweets,
+        builder: (context, state) {
+      return state.maybeMap(
+        loading: (v) => LoaderBuilder.buildLoader(
+          LoaderType.text,
+          count: 4,
+        ).build(context),
+        orElse: () => result,
+      );
+    });
   }
 }

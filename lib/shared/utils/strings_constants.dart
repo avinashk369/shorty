@@ -2,6 +2,9 @@ import 'package:shorty/shared/utils/social_media_enums.dart';
 
 class StringsConstants {
   static const String appName = "Shorty.AI";
+  static const String maxContentLength = "max_content_length";
+  static const String maxHashcode = "max_hashcode";
+  static const String copyMsg = "Content copied to clipboard";
   static const String signinWith = "Sign In With";
   static const String login = "Login";
   static const String otpNumber = "OTP Number";
@@ -180,8 +183,29 @@ class StringsConstants {
   };
 
   static const String bannerImage = "assets/images/dummy.png";
-  static const String ytTitle =
-      "Define goal | Chose Topic | Pick Tone | Chose Persona | Select language | Generate content | Shorty.AI ";
+
+  static const Map<SocialMediaEnums, dynamic> socialCardtitle = {
+    SocialMediaEnums.facebook:
+        "Define goal | Chose Topic | Pick Tone | Chose Persona | Select language | Generate content | Shorty.AI ",
+    SocialMediaEnums.instagram:
+        "Define goal | Chose Topic | Pick Tone | Chose Persona | Select language | Generate content | Shorty.AI ",
+    SocialMediaEnums.twitter:
+        "Define goal | Chose Topic | Pick Tone | Chose Persona | Select language | Generate content | Shorty.AI ",
+    SocialMediaEnums.linkedin:
+        "Define goal | Chose Topic | Pick Tone | Chose Persona | Select language | Generate content | Shorty.AI ",
+    SocialMediaEnums.youtube:
+        "Define goal | Chose Topic | Pick Tone | Chose Persona | Select language | Generate content | Shorty.AI ",
+    SocialMediaEnums.whatsapp:
+        "Define goal | Chose Topic | Pick Tone | Chose Persona | Select language | Generate content | Shorty.AI ",
+    SocialMediaEnums.thread:
+        "Define goal | Chose Topic | Pick Tone | Chose Persona | Select language | Generate content | Shorty.AI ",
+    SocialMediaEnums.pinterest:
+        "Define goal | Chose Topic | Pick Tone | Chose Persona | Select language | Generate content | Shorty.AI ",
+    SocialMediaEnums.tiktok:
+        "Define goal | Chose Topic | Pick Tone | Chose Persona | Select language | Generate content | Shorty.AI ",
+    SocialMediaEnums.telegram:
+        "Define goal | Chose Topic | Pick Tone | Chose Persona | Select language | Generate content | Shorty.AI "
+  };
 
   static const Map<SocialMediaEnums, dynamic> shareEnable = {
     SocialMediaEnums.facebook: false,

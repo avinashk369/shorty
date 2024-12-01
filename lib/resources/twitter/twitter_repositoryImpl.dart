@@ -3,11 +3,11 @@ import 'dart:math';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:shorty/models/ServerError.dart';
-import 'package:shorty/resources/twitter/twitter_repository.dart';
+import 'package:oauth2_client/oauth2_helper.dart';
 // import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:oauth2_client/twitter_oauth2_client.dart';
-import 'package:oauth2_client/oauth2_helper.dart';
+import 'package:shorty/models/ServerError.dart';
+import 'package:shorty/resources/twitter/twitter_repository.dart';
 import 'package:shorty/services/ApiClient.dart';
 import 'package:shorty/shared/utils/firebase_remote_config_service.dart';
 import 'package:shorty/shared/utils/strings_constants.dart';
@@ -158,15 +158,15 @@ class TwitterRepositoryImpl extends TwitterRepository {
 
       // Send the API request
 
-      final response = await apiClient.generateTweet(
-          "Bearer ${dotenv.env['OPEN_AI_KEY'] ?? ''}", requestBody);
+      // final response = await apiClient.generateTweet(
+      //     "Bearer ${dotenv.env['OPEN_AI_KEY'] ?? ''}", requestBody);
 
-      List<String> generatedResponses = [];
+      List<String> generatedResponses = [...StringsConstants.language];
 
       // Extract each response from the 'choices' array
-      for (var choice in response['choices']) {
-        generatedResponses.add(choice['message']['content'].trim());
-      }
+      // for (var choice in response['choices']) {
+      //   generatedResponses.add(choice['message']['content'].trim());
+      // }
 
       return generatedResponses;
     } catch (e) {

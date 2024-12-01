@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:shorty/shared/utils/utils.dart';
 
 class ChatInput extends StatefulWidget {
@@ -10,13 +9,13 @@ class ChatInput extends StatefulWidget {
   final Widget suffixIcon;
 
   const ChatInput({
-    Key? key,
+    super.key,
     required this.controller,
     required this.hintText,
     this.onSend,
     this.showPrompt,
     required this.suffixIcon,
-  }) : super(key: key);
+  });
 
   @override
   _ChatInputInputState createState() => _ChatInputInputState();
@@ -55,7 +54,7 @@ class _ChatInputInputState extends State<ChatInput> {
         keyboardType: TextInputType.multiline,
         cursorColor: greyColor,
         textCapitalization: TextCapitalization.sentences,
-
+        enableInteractiveSelection: false,
         decoration: InputDecoration(
           hintText: widget.hintText,
           hintStyle: kLabelStyle.copyWith(color: greyColor),
@@ -77,7 +76,7 @@ class _ChatInputInputState extends State<ChatInput> {
               padding: const EdgeInsets.all(8.0),
               child: CircleAvatar(
                 radius: 16,
-                backgroundColor: Colors.grey[200],
+                backgroundColor: darkColor,
                 child: widget.suffixIcon,
               ),
             ),

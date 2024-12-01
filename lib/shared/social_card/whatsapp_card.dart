@@ -1,6 +1,6 @@
 part of 'social_card.dart';
 
-class InstaCard implements SocialCard {
+class WhatsappCard implements SocialCard {
   @override
   Widget build({
     required BuildContext context,
@@ -34,50 +34,38 @@ class InstaCard implements SocialCard {
                 ),
               ),
               SizedBox(width: 8),
-              Text(
-                "Shorty.AI",
-                style: kLabelStyleBold.copyWith(fontSize: 14),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          SizedBox(
-            width: double.infinity,
-            child: Image(
-              image: AssetImage(
-                StringsConstants.bannerImage,
-              ),
-              fit: BoxFit.cover,
-              height: MediaQuery.of(context).size.height * .4,
-              width: double.infinity,
-            ),
-          ),
-          SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.favorite_outline),
-                  const SizedBox(width: 12),
-                  Image.asset("assets/images/insta_msg.png"),
+                  Text(
+                    "Shorty.AI",
+                    style: kLabelStyleBold.copyWith(fontSize: 14),
+                  ),
                 ],
               ),
-              ShareCopy(
-                  handleName: handleName, onShare: onShare, content: content),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           ReadMoreText(
             content,
             trimLines: 2,
             colorClickableText: primaryLight,
-            trimMode: TrimMode.line,
+            trimMode: TrimMode.length,
             trimCollapsedText: '...more',
             trimExpandedText: ' Less ',
             style: kLabelStyle,
           ),
           const SizedBox(height: 8),
+          SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ShareCopy(
+                  handleName: handleName,
+                  onShare: (cnt) => onShare(cnt),
+                  content: content),
+            ],
+          ),
         ],
       ).horizontalPadding(8).verticalPadding(8),
     );

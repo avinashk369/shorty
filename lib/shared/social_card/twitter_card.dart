@@ -10,10 +10,9 @@ class TwitterCard implements SocialCard {
     required Function(String content) onShare,
     required Function(String content) onCopy,
   }) {
-    return Card(
-      elevation: 5,
-      shadowColor: greyColor,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+    return CustomCard(
+      elevation: 0,
+      borderColor: greyColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -87,7 +86,7 @@ class TwitterCard implements SocialCard {
                   children: [
                     Icon(Icons.message_outlined),
                     Icon(Icons.sync),
-                    Icon(Icons.favorite, color: redColor),
+                    Icon(Icons.favorite_outline),
                     Icon(Icons.bookmark_outline),
                   ],
                 ),

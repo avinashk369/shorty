@@ -20,7 +20,7 @@ class CustomInput extends StatelessWidget {
   final bool? isEnabled;
   final bool? autoFocus;
   const CustomInput({
-    Key? key,
+    super.key,
     this.validator,
     this.focusNode,
     required this.hintText,
@@ -54,7 +54,7 @@ class CustomInput extends StatelessWidget {
     this.isEnabled = true,
     this.autoFocus = false,
     this.textCapitalization = TextCapitalization.words,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +70,7 @@ class CustomInput extends StatelessWidget {
       minLines: numOfLines,
       maxLines: numOfLines,
       maxLength: maxLength,
+      enableInteractiveSelection: false,
       obscureText: isPassword,
       textCapitalization: textCapitalization,
       onChanged: (value) => onChanged!(value),

@@ -23,7 +23,7 @@ class ShareCopy extends StatelessWidget {
         children: [
           Text(
             StringsConstants.shareEnable[handleName] ? "Share on" : "Copy text",
-            style: kLabelStyleBold.copyWith(fontSize: 11, color: greyColor),
+            style: kLabelStyleBold.copyWith(fontSize: 11, color: darkColor),
           ),
           CustomIconButton(
             onTap: () => onShare(content),

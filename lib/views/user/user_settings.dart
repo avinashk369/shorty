@@ -1,11 +1,10 @@
-library user_settings;
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shorty/blocs/auth/authbloc.dart';
 import 'package:shorty/blocs/choice/chice_enums.dart';
 import 'package:shorty/blocs/choice/settings_bloc.dart';
-import 'package:shorty/blocs/twitter/twitter_bloc.dart';
 import 'package:shorty/blocs/user/user_bloc.dart';
 import 'package:shorty/resources/user/user_repositoryimpl.dart';
 import 'package:shorty/routes/route_constants.dart';
@@ -14,15 +13,16 @@ import 'package:shorty/shared/utils/utils.dart';
 import 'package:shorty/shared/widgets/cusotm_appbar.dart';
 import 'package:shorty/shared/widgets/custom_button.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 part './components/choice_selector.dart';
 part './components/goals.dart';
-part './components/topic.dart';
-part './components/style.dart';
-part './components/persona.dart';
 part './components/language.dart';
+part './components/persona.dart';
+part './components/style.dart';
+part './components/topic.dart';
 
 class UserSettings extends StatefulWidget {
-  const UserSettings({Key? key}) : super(key: key);
+  const UserSettings({super.key});
 
   @override
   State<UserSettings> createState() => _UserSettingsState();
@@ -97,6 +97,7 @@ class _UserSettingsState extends State<UserSettings> {
                         onPressed: () {},
                         name: "Delete Account",
                         fontSize: 16,
+                        radius: 4,
                         backgroundColor: redColor,
                       )),
                   const SizedBox(height: kToolbarHeight * 1.5)
@@ -110,9 +111,9 @@ class _UserSettingsState extends State<UserSettings> {
   }
 
   Future<void> _launchUrl(String url) async {
-    final Uri _url = Uri.parse(url);
-    if (!await launchUrl(_url)) {
-      throw Exception('Could not launch $_url');
+    final Uri url0 = Uri.parse(url);
+    if (!await launchUrl(url0)) {
+      throw Exception('Could not launch $url0');
     }
   }
 

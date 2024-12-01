@@ -1,19 +1,23 @@
-library social_card;
+library;
 
 import 'package:flutter/material.dart';
 import 'package:shorty/shared/extensions/widget_modifier.dart';
 import 'package:shorty/shared/social_card/share_copy.dart';
 import 'package:shorty/shared/utils/social_media_enums.dart';
 import 'package:shorty/shared/utils/utils.dart';
-import 'package:shorty/shared/widgets/custom_icon_button.dart';
 import 'package:shorty/shared/widgets/read_more.dart';
-part 'social_card_factory.dart';
+
+import 'custom_card.dart';
+
 part 'fb_card.dart';
-part 'insta_card.dart';
 part 'in_card.dart';
+part 'insta_card.dart';
+part 'pinterest_card.dart';
+part 'social_card_factory.dart';
 part 'thread_card.dart';
 part 'tiktok_card.dart';
 part 'twitter_card.dart';
+part 'whatsapp_card.dart';
 part 'yt_card.dart';
 
 abstract class SocialCard {
@@ -23,6 +27,8 @@ abstract class SocialCard {
         return FbCard();
       case SocialMediaEnums.instagram:
         return InstaCard();
+      case SocialMediaEnums.pinterest:
+        return PinterestCard();
       case SocialMediaEnums.twitter:
         return TwitterCard();
       case SocialMediaEnums.linkedin:
@@ -33,6 +39,9 @@ abstract class SocialCard {
         return YtCard();
       case SocialMediaEnums.tiktok:
         return TikTokCard();
+      case SocialMediaEnums.whatsapp:
+      case SocialMediaEnums.telegram:
+        return WhatsappCard();
       default:
         return TwitterCard();
     }

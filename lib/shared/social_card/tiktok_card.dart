@@ -10,10 +10,9 @@ class TikTokCard implements SocialCard {
     required Function(String content) onShare,
     required Function(String content) onCopy,
   }) {
-    return Card(
-      elevation: 5,
-      shadowColor: greyColor,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+    return CustomCard(
+      elevation: 0,
+      borderColor: greyColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -89,6 +88,12 @@ class TikTokCard implements SocialCard {
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: 8),
+          Align(
+            alignment: Alignment.centerRight,
+            child: ShareCopy(
+                handleName: handleName, onShare: onShare, content: content),
           ),
           const SizedBox(height: 8),
         ],

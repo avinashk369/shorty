@@ -8,6 +8,7 @@ class TwitterState with _$TwitterState {
   const factory TwitterState.connected({required Map<String, dynamic> user}) =
       TwitterConnected;
   const factory TwitterState.generatedTweets(
-      {required List<String> generatedTweet}) = GeneratedTweets;
+      {required List<String> generatedTweet,
+      required String userInput}) = GeneratedTweets;
   const factory TwitterState.error({required String message}) = TwitterError;
 }

@@ -8,6 +8,7 @@ class ExpandablePageView extends StatefulWidget {
   final PageController? controller;
   final ValueChanged<int> onPageChanged;
   final bool reverse;
+  final bool showIndicator;
 
   const ExpandablePageView({
     required this.itemCount,
@@ -15,8 +16,9 @@ class ExpandablePageView extends StatefulWidget {
     this.controller,
     required this.onPageChanged,
     this.reverse = false,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+    this.showIndicator = true,
+  });
 
   @override
   _ExpandablePageViewState createState() => _ExpandablePageViewState();
@@ -34,12 +36,16 @@ class _ExpandablePageViewState extends State<ExpandablePageView> {
     super.initState();
     _heights = List.filled(widget.itemCount, 0, growable: true);
     _pageController = widget.controller ?? PageController();
-    _pageController.addListener(_updatePage);
+    if (widget.showIndicator) {
+      _pageController.addListener(_updatePage);
+    }
   }
 
   @override
   void dispose() {
-    _pageController.removeListener(_updatePage);
+    if (widget.showIndicator) {
+      _pageController.removeListener(_updatePage);
+    }
     _pageController.dispose();
     super.dispose();
   }
@@ -55,7 +61,7 @@ class _ExpandablePageViewState extends State<ExpandablePageView> {
         controller: _pageController,
         itemCount: widget.itemCount,
         itemBuilder: _itemBuilder,
-        onPageChanged: widget.onPageChanged,
+        onPageChanged: widget.showIndicator ? widget.onPageChanged : null,
         reverse: widget.reverse,
       ),
     );

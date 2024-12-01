@@ -18,19 +18,30 @@ class HomePage extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 8),
             margin: EdgeInsets.symmetric(horizontal: 8),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20), color: Colors.amber),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: darkColor.withOpacity(.2)),
+              // color: Colors.amber,
+            ),
             child: Row(
               children: [
                 Text(
                   "20",
-                  style: kLabelStyle.copyWith(
-                      fontWeight: FontWeight.w600, color: secondaryLight),
+                  style: kLabelStyleBold.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: darkColor,
+                    fontSize: 18,
+                  ),
                 ),
                 const SizedBox(width: 4),
-                Icon(
-                  Icons.token,
-                  color: secondaryLight,
-                ),
+                // Icon(
+                //   Icons.token,
+                //   color: secondaryLight,
+                // ),
+                Image.asset(
+                  "assets/images/ai.png",
+                  color: Colors.amber,
+                  height: 16,
+                )
               ],
             ),
           )

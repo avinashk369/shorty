@@ -1,11 +1,11 @@
 part of 'social_card.dart';
 
-class YtCard implements SocialCard {
+class PinterestCard implements SocialCard {
   @override
   Widget build({
     required BuildContext context,
     required String content,
-    String? title,
+    String? title = '',
     required SocialMediaEnums handleName,
     required Function(String content) onShare,
     required Function(String content) onCopy,
@@ -16,37 +16,18 @@ class YtCard implements SocialCard {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 8),
           SizedBox(
             width: double.infinity,
-            child: Stack(
-              children: [
-                Image(
-                  image: AssetImage(
-                    StringsConstants.bannerImage,
-                  ),
-                  fit: BoxFit.cover,
-                  height: MediaQuery.of(context).size.height * .4,
-                  width: double.infinity,
-                ),
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  child: Image.asset(
-                    StringsConstants.socialIconsLight[handleName],
-                    height: MediaQuery.of(context).size.height * .4,
-                  ),
-                ),
-              ],
+            child: Image(
+              image: AssetImage(
+                StringsConstants.bannerImage,
+              ),
+              fit: BoxFit.cover,
+              height: MediaQuery.of(context).size.height * .4,
+              width: double.infinity,
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            content,
-            style: kLabelStyleBold.copyWith(),
-          ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Row(
             children: [
               Card(
@@ -64,7 +45,7 @@ class YtCard implements SocialCard {
                   height: 40,
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -74,7 +55,7 @@ class YtCard implements SocialCard {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    "1.2M",
+                    "369K",
                     style: kLabelStyleBold.copyWith(
                       fontSize: 11,
                       color: greyColor,
@@ -82,39 +63,37 @@ class YtCard implements SocialCard {
                   ),
                 ],
               ),
-              const SizedBox(width: 32),
+              const Spacer(),
               RawChip(
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
-                label: Text(
-                  'Subscribe',
-                  style: kLabelStyle.copyWith(color: secondaryLight),
+                  borderRadius: BorderRadius.circular(20),
                 ),
-                backgroundColor: darkColor,
+                label: Text(
+                  'Follow',
+                  style: kLabelStyleBold.copyWith(color: darkColor),
+                ),
+                backgroundColor: darkColor.withOpacity(.05),
               )
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
           ReadMoreText(
             content,
-            trimLines: 1,
+            trimLines: 2,
             colorClickableText: primaryLight,
             trimMode: TrimMode.line,
             trimCollapsedText: '...more',
             trimExpandedText: ' Less ',
-            style: kLabelStyle,
+            style: kLabelStyleBold.copyWith(fontSize: 20),
           ),
-          SizedBox(height: 8),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Expanded(
-                flex: 2,
-                child: ShareCopy(
-                    handleName: handleName, onShare: onShare, content: content),
-              ),
+              ShareCopy(
+                  handleName: handleName, onShare: onShare, content: content),
             ],
           ),
+          const SizedBox(height: 8),
         ],
       ).horizontalPadding(8).verticalPadding(8),
     );

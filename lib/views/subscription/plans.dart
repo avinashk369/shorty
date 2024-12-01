@@ -102,6 +102,7 @@ class Plans extends StatelessWidget {
             onPressed: () {},
             name: '\$$price',
             fontSize: 20,
+            radius: 4,
             // backgroundColor: darkColor,
           ).horizontalPadding(8),
         ),

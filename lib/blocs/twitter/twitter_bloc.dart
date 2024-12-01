@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shorty/models/ServerError.dart';
 import 'package:shorty/resources/twitter/twitter_repositoryImpl.dart';
+
 part 'twitter_bloc.freezed.dart';
 part 'twitter_event.dart';
 part 'twitter_state.dart';
@@ -31,7 +32,7 @@ class TwitterBloc extends Bloc<TwitterEvent, TwitterState> {
           style: event.style,
           persona: event.persona,
           userInput: event.userInput);
-      emit(GeneratedTweets(generatedTweet: tweets));
+      emit(GeneratedTweets(generatedTweet: tweets, userInput: event.userInput));
     } on ServerError catch (error) {
       emit(TwitterError(message: error.errorMessage));
     } catch (e) {

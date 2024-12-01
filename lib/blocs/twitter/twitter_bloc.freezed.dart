@@ -414,7 +414,8 @@ mixin _$TwitterState {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(Map<String, dynamic> user) connected,
-    required TResult Function(List<String> generatedTweet) generatedTweets,
+    required TResult Function(List<String> generatedTweet, String userInput)
+        generatedTweets,
     required TResult Function(String message) error,
   }) =>
       throw _privateConstructorUsedError;
@@ -423,7 +424,8 @@ mixin _$TwitterState {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(Map<String, dynamic> user)? connected,
-    TResult? Function(List<String> generatedTweet)? generatedTweets,
+    TResult? Function(List<String> generatedTweet, String userInput)?
+        generatedTweets,
     TResult? Function(String message)? error,
   }) =>
       throw _privateConstructorUsedError;
@@ -432,7 +434,8 @@ mixin _$TwitterState {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(Map<String, dynamic> user)? connected,
-    TResult Function(List<String> generatedTweet)? generatedTweets,
+    TResult Function(List<String> generatedTweet, String userInput)?
+        generatedTweets,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) =>
@@ -533,7 +536,8 @@ class _$TwitterInitializingImpl implements TwitterInitializing {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(Map<String, dynamic> user) connected,
-    required TResult Function(List<String> generatedTweet) generatedTweets,
+    required TResult Function(List<String> generatedTweet, String userInput)
+        generatedTweets,
     required TResult Function(String message) error,
   }) {
     return initial();
@@ -545,7 +549,8 @@ class _$TwitterInitializingImpl implements TwitterInitializing {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(Map<String, dynamic> user)? connected,
-    TResult? Function(List<String> generatedTweet)? generatedTweets,
+    TResult? Function(List<String> generatedTweet, String userInput)?
+        generatedTweets,
     TResult? Function(String message)? error,
   }) {
     return initial?.call();
@@ -557,7 +562,8 @@ class _$TwitterInitializingImpl implements TwitterInitializing {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(Map<String, dynamic> user)? connected,
-    TResult Function(List<String> generatedTweet)? generatedTweets,
+    TResult Function(List<String> generatedTweet, String userInput)?
+        generatedTweets,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -656,7 +662,8 @@ class _$TwitterLoadingImpl implements TwitterLoading {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(Map<String, dynamic> user) connected,
-    required TResult Function(List<String> generatedTweet) generatedTweets,
+    required TResult Function(List<String> generatedTweet, String userInput)
+        generatedTweets,
     required TResult Function(String message) error,
   }) {
     return loading();
@@ -668,7 +675,8 @@ class _$TwitterLoadingImpl implements TwitterLoading {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(Map<String, dynamic> user)? connected,
-    TResult? Function(List<String> generatedTweet)? generatedTweets,
+    TResult? Function(List<String> generatedTweet, String userInput)?
+        generatedTweets,
     TResult? Function(String message)? error,
   }) {
     return loading?.call();
@@ -680,7 +688,8 @@ class _$TwitterLoadingImpl implements TwitterLoading {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(Map<String, dynamic> user)? connected,
-    TResult Function(List<String> generatedTweet)? generatedTweets,
+    TResult Function(List<String> generatedTweet, String userInput)?
+        generatedTweets,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -814,7 +823,8 @@ class _$TwitterConnectedImpl implements TwitterConnected {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(Map<String, dynamic> user) connected,
-    required TResult Function(List<String> generatedTweet) generatedTweets,
+    required TResult Function(List<String> generatedTweet, String userInput)
+        generatedTweets,
     required TResult Function(String message) error,
   }) {
     return connected(user);
@@ -826,7 +836,8 @@ class _$TwitterConnectedImpl implements TwitterConnected {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(Map<String, dynamic> user)? connected,
-    TResult? Function(List<String> generatedTweet)? generatedTweets,
+    TResult? Function(List<String> generatedTweet, String userInput)?
+        generatedTweets,
     TResult? Function(String message)? error,
   }) {
     return connected?.call(user);
@@ -838,7 +849,8 @@ class _$TwitterConnectedImpl implements TwitterConnected {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(Map<String, dynamic> user)? connected,
-    TResult Function(List<String> generatedTweet)? generatedTweets,
+    TResult Function(List<String> generatedTweet, String userInput)?
+        generatedTweets,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -908,7 +920,7 @@ abstract class _$$GeneratedTweetsImplCopyWith<$Res> {
           $Res Function(_$GeneratedTweetsImpl) then) =
       __$$GeneratedTweetsImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({List<String> generatedTweet});
+  $Res call({List<String> generatedTweet, String userInput});
 }
 
 /// @nodoc
@@ -925,12 +937,17 @@ class __$$GeneratedTweetsImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? generatedTweet = null,
+    Object? userInput = null,
   }) {
     return _then(_$GeneratedTweetsImpl(
       generatedTweet: null == generatedTweet
           ? _value._generatedTweet
           : generatedTweet // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      userInput: null == userInput
+          ? _value.userInput
+          : userInput // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -938,7 +955,8 @@ class __$$GeneratedTweetsImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$GeneratedTweetsImpl implements GeneratedTweets {
-  const _$GeneratedTweetsImpl({required final List<String> generatedTweet})
+  const _$GeneratedTweetsImpl(
+      {required final List<String> generatedTweet, required this.userInput})
       : _generatedTweet = generatedTweet;
 
   final List<String> _generatedTweet;
@@ -950,8 +968,11 @@ class _$GeneratedTweetsImpl implements GeneratedTweets {
   }
 
   @override
+  final String userInput;
+
+  @override
   String toString() {
-    return 'TwitterState.generatedTweets(generatedTweet: $generatedTweet)';
+    return 'TwitterState.generatedTweets(generatedTweet: $generatedTweet, userInput: $userInput)';
   }
 
   @override
@@ -960,12 +981,14 @@ class _$GeneratedTweetsImpl implements GeneratedTweets {
         (other.runtimeType == runtimeType &&
             other is _$GeneratedTweetsImpl &&
             const DeepCollectionEquality()
-                .equals(other._generatedTweet, _generatedTweet));
+                .equals(other._generatedTweet, _generatedTweet) &&
+            (identical(other.userInput, userInput) ||
+                other.userInput == userInput));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_generatedTweet));
+  int get hashCode => Object.hash(runtimeType,
+      const DeepCollectionEquality().hash(_generatedTweet), userInput);
 
   /// Create a copy of TwitterState
   /// with the given fields replaced by the non-null parameter values.
@@ -982,10 +1005,11 @@ class _$GeneratedTweetsImpl implements GeneratedTweets {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(Map<String, dynamic> user) connected,
-    required TResult Function(List<String> generatedTweet) generatedTweets,
+    required TResult Function(List<String> generatedTweet, String userInput)
+        generatedTweets,
     required TResult Function(String message) error,
   }) {
-    return generatedTweets(generatedTweet);
+    return generatedTweets(generatedTweet, userInput);
   }
 
   @override
@@ -994,10 +1018,11 @@ class _$GeneratedTweetsImpl implements GeneratedTweets {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(Map<String, dynamic> user)? connected,
-    TResult? Function(List<String> generatedTweet)? generatedTweets,
+    TResult? Function(List<String> generatedTweet, String userInput)?
+        generatedTweets,
     TResult? Function(String message)? error,
   }) {
-    return generatedTweets?.call(generatedTweet);
+    return generatedTweets?.call(generatedTweet, userInput);
   }
 
   @override
@@ -1006,12 +1031,13 @@ class _$GeneratedTweetsImpl implements GeneratedTweets {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(Map<String, dynamic> user)? connected,
-    TResult Function(List<String> generatedTweet)? generatedTweets,
+    TResult Function(List<String> generatedTweet, String userInput)?
+        generatedTweets,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
     if (generatedTweets != null) {
-      return generatedTweets(generatedTweet);
+      return generatedTweets(generatedTweet, userInput);
     }
     return orElse();
   }
@@ -1058,10 +1084,12 @@ class _$GeneratedTweetsImpl implements GeneratedTweets {
 }
 
 abstract class GeneratedTweets implements TwitterState {
-  const factory GeneratedTweets({required final List<String> generatedTweet}) =
-      _$GeneratedTweetsImpl;
+  const factory GeneratedTweets(
+      {required final List<String> generatedTweet,
+      required final String userInput}) = _$GeneratedTweetsImpl;
 
   List<String> get generatedTweet;
+  String get userInput;
 
   /// Create a copy of TwitterState
   /// with the given fields replaced by the non-null parameter values.
@@ -1141,7 +1169,8 @@ class _$TwitterErrorImpl implements TwitterError {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(Map<String, dynamic> user) connected,
-    required TResult Function(List<String> generatedTweet) generatedTweets,
+    required TResult Function(List<String> generatedTweet, String userInput)
+        generatedTweets,
     required TResult Function(String message) error,
   }) {
     return error(message);
@@ -1153,7 +1182,8 @@ class _$TwitterErrorImpl implements TwitterError {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(Map<String, dynamic> user)? connected,
-    TResult? Function(List<String> generatedTweet)? generatedTweets,
+    TResult? Function(List<String> generatedTweet, String userInput)?
+        generatedTweets,
     TResult? Function(String message)? error,
   }) {
     return error?.call(message);
@@ -1165,7 +1195,8 @@ class _$TwitterErrorImpl implements TwitterError {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(Map<String, dynamic> user)? connected,
-    TResult Function(List<String> generatedTweet)? generatedTweets,
+    TResult Function(List<String> generatedTweet, String userInput)?
+        generatedTweets,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
