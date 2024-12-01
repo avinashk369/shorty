@@ -207,4 +207,41 @@ class ReadMoreTextState extends State<ReadMoreText> {
       );
     });
   }
+
+  /// style #tag
+  TextSpan getStyledText(
+      String text, TextStyle defaultStyle, TextStyle tagStyle) {
+    final RegExp tagRegExp = RegExp(r'#[\w]+'); // Matches hashtags
+
+    List<InlineSpan> spans = [];
+    int lastMatchEnd = 0;
+
+    for (final match in tagRegExp.allMatches(text)) {
+      // Add text before the #tag
+      if (match.start > lastMatchEnd) {
+        spans.add(TextSpan(
+          text: text.substring(lastMatchEnd, match.start),
+          style: defaultStyle,
+        ));
+      }
+
+      // Add the #tag with the tagStyle
+      spans.add(TextSpan(
+        text: match.group(0),
+        style: tagStyle,
+      ));
+
+      lastMatchEnd = match.end;
+    }
+
+    // Add remaining text after the last #tag
+    if (lastMatchEnd < text.length) {
+      spans.add(TextSpan(
+        text: text.substring(lastMatchEnd),
+        style: defaultStyle,
+      ));
+    }
+
+    return TextSpan(children: spans);
+  }
 }

@@ -10,6 +10,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:network_monitor_cp/network/network_monitor.dart';
 import 'package:shorty/services/ApiClient.dart';
 import 'package:shorty/shared/utils/firebase_remote_config_service.dart';
 import 'package:shorty/shared/utils/preference_utils.dart';
@@ -19,6 +20,7 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await NetworkMonitor().initialize();
   await Firebase.initializeApp();
   await FirebaseRemoteConfigService().initialize();
 

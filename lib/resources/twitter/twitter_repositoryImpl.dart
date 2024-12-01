@@ -158,15 +158,17 @@ class TwitterRepositoryImpl extends TwitterRepository {
 
       // Send the API request
 
-      // final response = await apiClient.generateTweet(
-      //     "Bearer ${dotenv.env['OPEN_AI_KEY'] ?? ''}", requestBody);
+      final response = await apiClient.generateTweet(
+          "Bearer ${dotenv.env['OPEN_AI_KEY'] ?? ''}", requestBody);
 
-      List<String> generatedResponses = [...StringsConstants.language];
+      List<String> generatedResponses = [];
+
+      /// ...StringsConstants.language use when static data to show for the testing
 
       // Extract each response from the 'choices' array
-      // for (var choice in response['choices']) {
-      //   generatedResponses.add(choice['message']['content'].trim());
-      // }
+      for (var choice in response['choices']) {
+        generatedResponses.add(choice['message']['content'].trim());
+      }
 
       return generatedResponses;
     } catch (e) {

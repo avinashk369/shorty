@@ -60,8 +60,7 @@ class _ContentGeneratorState extends State<ContentGenerator> {
             SliverList(
               delegate: SliverChildListDelegate(
                 [
-                  const SizedBox(height: 12),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 24),
                   BlocBuilder<TwitterBloc, TwitterState>(
                       builder: (context, state) {
                     return state.maybeMap(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:network_monitor_cp/network/network_aware_navigator_observer.dart';
 import 'package:shorty/blocs/auth/authbloc.dart';
 import 'package:shorty/blocs/location/location_bloc.dart';
 import 'package:shorty/main.dart';
@@ -43,6 +44,7 @@ class Shorty extends StatelessWidget {
         ],
         child: MaterialApp(
           navigatorKey: navigatorKey,
+          navigatorObservers: [NetworkAwareNavigatorObserver()],
           title: StringsConstants.appName,
           initialRoute: homeRoute,
           onGenerateRoute: RouteGenerator.generateRoute,
