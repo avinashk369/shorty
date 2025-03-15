@@ -6,22 +6,14 @@ part of 'user_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel()
-  ..name = json['name'] as String?
-  ..token = json['token'] as String?
-  ..id = json['id'] as String?;
+UserModel _$UserModelFromJson(Map<String, dynamic> json) =>
+    UserModel()
+      ..name = json['name'] as String?
+      ..token = json['token'] as String?
+      ..id = json['id'] as String?;
 
-Map<String, dynamic> _$UserModelToJson(UserModel instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('name', instance.name);
-  writeNotNull('token', instance.token);
-  writeNotNull('id', instance.id);
-  return val;
-}
+Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
+  if (instance.name case final value?) 'name': value,
+  if (instance.token case final value?) 'token': value,
+  if (instance.id case final value?) 'id': value,
+};

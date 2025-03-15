@@ -41,15 +41,16 @@ class _UserAuthScreenState extends State<UserAuthScreen> {
           // ),
         ),
         child: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: currentTheme.currentTheme == ThemeMode.light
-              ? SystemUiOverlayStyle.dark
-              : SystemUiOverlayStyle.light,
+          value:
+              currentTheme.currentTheme == ThemeMode.light
+                  ? SystemUiOverlayStyle.dark
+                  : SystemUiOverlayStyle.light,
           child: ResponsiveWidgets(
             mobileLayout: MultiBlocProvider(
               providers: [
                 BlocProvider<UserBloc>(
-                  create: (context) =>
-                      UserBloc(context.read<UserRepositoryImpl>()),
+                  create:
+                      (context) => UserBloc(context.read<UserRepositoryImpl>()),
                 ),
               ],
               child: const UserAuth(),

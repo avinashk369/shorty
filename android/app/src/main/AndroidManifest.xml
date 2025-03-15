@@ -12,6 +12,7 @@
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
+            <!-- android:enableOnBackInvokedCallback="true" -->
             <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user
                  while the Flutter UI initializes. After that, this theme continues
@@ -30,10 +31,20 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "example://gizmos” -->
+                <!-- Registered Callback URLs in TwitterApp -->
+                <data android:scheme="shorty-ai" android:host="" />
+    <!-- host is option -->
+            </intent-filter>
+
             
         </activity>
 
-        <activity
+        <!-- <activity
             android:name="com.linusu.flutter_web_auth_2.CallbackActivity"
             android:exported="true"
             android:launchMode="singleTop">
@@ -41,9 +52,9 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="shorty" android:host="callback" android:pathPrefix="/twitter"/>
+                <data android:scheme="shorty" android:host=""/>
             </intent-filter>
-        </activity>
+        </activity> -->
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

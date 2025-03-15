@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:network_monitor_cp/network/network_monitor.dart';
 import 'package:shorty/services/ApiClient.dart';
+import 'package:shorty/services/notification_service.dart';
 import 'package:shorty/shared/utils/firebase_remote_config_service.dart';
 import 'package:shorty/shared/utils/preference_utils.dart';
 import 'package:shorty/shorty.dart';
@@ -22,14 +23,18 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await NetworkMonitor().initialize();
   await Firebase.initializeApp();
+  await NotificationService.instance.initialize();
   await FirebaseRemoteConfigService().initialize();
 
   await PreferenceUtils.getInstance();
 
-  await FirebaseCrashlytics.instance
-      .setCrashlyticsCollectionEnabled(kReleaseMode);
-  await FirebaseCrashlytics.instance
-      .setCustomKey("Env", kReleaseMode ? 'CUG' : 'UAT');
+  await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(
+    kReleaseMode,
+  );
+  await FirebaseCrashlytics.instance.setCustomKey(
+    "Env",
+    kReleaseMode ? 'CUG' : 'UAT',
+  );
 
   FlutterError.onError = (err) async {
     if (kDebugMode ||
@@ -37,17 +42,20 @@ void main() async {
         err.exception is AssertionError ||
         err.exception is SocketException ||
         (err.exception is FlutterError &&
-            err.exception
-                .toString()
-                .toLowerCase()
-                .contains("build scheduled during frame"))) {
+            err.exception.toString().toLowerCase().contains(
+              "build scheduled during frame",
+            ))) {
       return;
     }
     await FirebaseCrashlytics.instance.recordFlutterFatalError(err);
     await FirebaseCrashlytics.instance.sendUnsentReports();
     await FirebaseCrashlytics.instance.recordFlutterError(err);
-    await FirebaseCrashlytics.instance.recordError(err.exception, err.stack,
-        reason: err.exception.toString(), printDetails: true);
+    await FirebaseCrashlytics.instance.recordError(
+      err.exception,
+      err.stack,
+      reason: err.exception.toString(),
+      printDetails: true,
+    );
   };
   // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
   PlatformDispatcher.instance.onError = (error, stack) {
@@ -65,23 +73,27 @@ void main() async {
   // await performance.setPerformanceCollectionEnabled(false);
 
   await dotenv.load(fileName: '.env');
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    statusBarBrightness: Brightness.dark,
-    statusBarIconBrightness: Brightness.dark,
-    // systemNavigationBarColor: Colors.transparent,
-    // systemNavigationBarIconBrightness: Brightness.dark,
-  ));
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarBrightness: Brightness.dark,
+      statusBarIconBrightness: Brightness.dark,
+      // systemNavigationBarColor: Colors.transparent,
+      // systemNavigationBarIconBrightness: Brightness.dark,
+    ),
+  );
   await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
   Dio dio = Dio();
-  dio.interceptors.add(LogInterceptor(
+  dio.interceptors.add(
+    LogInterceptor(
       // responseBody: true,
       // request: true,
       // requestBody: true,
-      ));
+    ),
+  );
   dio.interceptors.add(DioFirebasePerformanceInterceptor());
   ApiClient apiClient = ApiClient(dio);
 

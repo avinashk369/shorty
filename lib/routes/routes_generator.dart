@@ -28,9 +28,7 @@ class RouteGenerator {
         Map<String, dynamic> data = args as Map<String, dynamic>;
         SocialMediaEnums handle = data['handle'];
         return SlideRightRoute(
-          page: ContentGenerator(
-            socialMediaEnums: handle,
-          ),
+          page: ContentGenerator(socialMediaEnums: handle),
         );
 
       default:
@@ -40,15 +38,15 @@ class RouteGenerator {
   }
 
   static Route<dynamic> _errorRoute() {
-    return MaterialPageRoute(builder: (_) {
-      return Scaffold(
-        // appBar: AppBar(
-        //   title: const Text('Error'),
-        // ),
-        body: const Center(
-          child: Text(ErrorConstants.noStringAttached),
-        ),
-      );
-    });
+    return MaterialPageRoute(
+      builder: (_) {
+        return Scaffold(
+          // appBar: AppBar(
+          //   title: const Text('Error'),
+          // ),
+          body: const Center(child: Text(ErrorConstants.noStringAttached)),
+        );
+      },
+    );
   }
 }

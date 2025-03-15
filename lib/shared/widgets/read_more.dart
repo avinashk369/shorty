@@ -5,11 +5,9 @@ import 'package:shorty/blocs/twitter/twitterbloc.dart';
 import 'package:shorty/shared/utils/utils.dart';
 import 'package:shorty/shared/widgets/loaders/loader_builder.dart';
 import 'package:shorty/shared/widgets/loaders/loader_enums.dart';
+import 'package:shorty/shared/widgets/loading_ui.dart';
 
-enum TrimMode {
-  length,
-  line,
-}
+enum TrimMode { length, line }
 
 class ReadMoreText extends StatefulWidget {
   const ReadMoreText(
@@ -79,9 +77,7 @@ class ReadMoreTextState extends State<ReadMoreText> {
 
     TextSpan link = TextSpan(
       text: _readMore ? widget.trimCollapsedText : widget.trimExpandedText,
-      style: kLabelStyleBold.copyWith(
-        color: colorClickableText,
-      ),
+      style: kLabelStyleBold.copyWith(color: colorClickableText),
       recognizer: TapGestureRecognizer()..onTap = _onTapLink,
     );
 
@@ -91,10 +87,7 @@ class ReadMoreTextState extends State<ReadMoreText> {
         final double maxWidth = constraints.maxWidth;
 
         // Create a TextSpan with data
-        final text = TextSpan(
-          style: effectiveTextStyle,
-          text: widget.data,
-        );
+        final text = TextSpan(style: effectiveTextStyle, text: widget.data);
 
         // Layout and measure link
         TextPainter textPainter = TextPainter(
@@ -121,10 +114,9 @@ class ReadMoreTextState extends State<ReadMoreText> {
         int endIndex;
 
         if (linkSize.width < maxWidth) {
-          final pos = textPainter.getPositionForOffset(Offset(
-            textSize.width - linkSize.width,
-            textSize.height,
-          ));
+          final pos = textPainter.getPositionForOffset(
+            Offset(textSize.width - linkSize.width, textSize.height),
+          );
           endIndex = textPainter.getOffsetBefore(pos.offset) ?? 0;
         } else {
           var pos = textPainter.getPositionForOffset(
@@ -140,38 +132,35 @@ class ReadMoreTextState extends State<ReadMoreText> {
             if (widget.trimLength! < widget.data!.length) {
               textSpan = TextSpan(
                 style: effectiveTextStyle,
-                text: _readMore
-                    ? widget.data!.substring(0, widget.trimLength)
-                    : widget.data,
+                text:
+                    _readMore
+                        ? widget.data!.substring(0, widget.trimLength)
+                        : widget.data,
                 children: <TextSpan>[link],
               );
             } else {
-              textSpan = TextSpan(
-                style: effectiveTextStyle,
-                text: widget.data,
-              );
+              textSpan = TextSpan(style: effectiveTextStyle, text: widget.data);
             }
             break;
           case TrimMode.line:
             if (textPainter.didExceedMaxLines) {
               textSpan = TextSpan(
                 style: effectiveTextStyle,
-                text: _readMore
-                    ? widget.data!.substring(0, endIndex) +
-                        (linkLongerThanLine ? _kLineSeparator : '')
-                    : widget.data,
+                text:
+                    _readMore
+                        ? widget.data!.substring(0, endIndex) +
+                            (linkLongerThanLine ? _kLineSeparator : '')
+                        : widget.data,
                 children: <TextSpan>[link],
               );
             } else {
-              textSpan = TextSpan(
-                style: effectiveTextStyle,
-                text: widget.data,
-              );
+              textSpan = TextSpan(style: effectiveTextStyle, text: widget.data);
             }
             break;
           default:
             throw Exception(
-                'TrimMode type: ${widget.trimMode} is not supported');
+              'TrimMode type: ${widget.trimMode} is not supported',
+            );
         }
 
         return RichText(
@@ -190,27 +179,29 @@ class ReadMoreTextState extends State<ReadMoreText> {
       result = Semantics(
         textDirection: widget.textDirection,
         label: widget.semanticsLabel,
-        child: ExcludeSemantics(
-          child: result,
-        ),
+        child: ExcludeSemantics(child: result),
       );
     }
     return BlocBuilder<TwitterBloc, TwitterState>(
-        // buildWhen: (previous, current) => current is GeneratedTweets,
-        builder: (context, state) {
-      return state.maybeMap(
-        loading: (v) => LoaderBuilder.buildLoader(
-          LoaderType.text,
-          count: 4,
-        ).build(context),
-        orElse: () => result,
-      );
-    });
+      // buildWhen: (previous, current) => current is GeneratedTweets,
+      builder: (context, state) {
+        if (state is LoadingUI) {
+          return LoaderBuilder.buildLoader(
+            LoaderType.text,
+            count: 4,
+          ).build(context);
+        }
+        return result;
+      },
+    );
   }
 
   /// style #tag
   TextSpan getStyledText(
-      String text, TextStyle defaultStyle, TextStyle tagStyle) {
+    String text,
+    TextStyle defaultStyle,
+    TextStyle tagStyle,
+  ) {
     final RegExp tagRegExp = RegExp(r'#[\w]+'); // Matches hashtags
 
     List<InlineSpan> spans = [];
@@ -219,27 +210,25 @@ class ReadMoreTextState extends State<ReadMoreText> {
     for (final match in tagRegExp.allMatches(text)) {
       // Add text before the #tag
       if (match.start > lastMatchEnd) {
-        spans.add(TextSpan(
-          text: text.substring(lastMatchEnd, match.start),
-          style: defaultStyle,
-        ));
+        spans.add(
+          TextSpan(
+            text: text.substring(lastMatchEnd, match.start),
+            style: defaultStyle,
+          ),
+        );
       }
 
       // Add the #tag with the tagStyle
-      spans.add(TextSpan(
-        text: match.group(0),
-        style: tagStyle,
-      ));
+      spans.add(TextSpan(text: match.group(0), style: tagStyle));
 
       lastMatchEnd = match.end;
     }
 
     // Add remaining text after the last #tag
     if (lastMatchEnd < text.length) {
-      spans.add(TextSpan(
-        text: text.substring(lastMatchEnd),
-        style: defaultStyle,
-      ));
+      spans.add(
+        TextSpan(text: text.substring(lastMatchEnd), style: defaultStyle),
+      );
     }
 
     return TextSpan(children: spans);
