@@ -39,9 +39,9 @@ class StringsConstants {
     "Your One-Stop Solution for Snappy Social Media Content",
     "Get Ready to Post: Short, Smart, and Social-Ready",
     "Fuel Your Social Media with Instant, Engaging Content",
-    "Short Content, Big Impact – Tailored for Every Platform",
+    "Short Content,\nBig Impact\nTailored for Every Platform",
     "Simplify Your Social Strategy with Instant Content Creation",
-    "One Tap to Craft Perfect Posts for All Your Platforms"
+    "One Tap to Craft Perfect Posts for All Your Platforms",
   ];
 
   static const List<String> topics = [
@@ -61,7 +61,7 @@ class StringsConstants {
     "Tech Startups & Innovation",
     "Blockchain & Crypto",
     "Social Media & Branding",
-    "Sports & Fitness"
+    "Sports & Fitness",
   ];
   static const List<String> styles = [
     "Inspirational / Motivational",
@@ -80,7 +80,7 @@ class StringsConstants {
     "Lifestyle / Wellness",
     "Innovative Startup Founder",
     "Cryptocurrency / Web3 Evangelist",
-    "Celebrity / Influencer"
+    "Celebrity / Influencer",
   ];
 
   static const List<String> persona = [
@@ -125,7 +125,7 @@ class StringsConstants {
     "Anderson Cooper",
     "Christiane Amanpour",
     "Albert Einstein",
-    "Marcus Aurelius"
+    "Marcus Aurelius",
   ];
 
   static const List<String> goals = [
@@ -138,7 +138,7 @@ class StringsConstants {
     "Education & Awareness",
     "Reputation Management",
     "Influence Building",
-    "Entertainment"
+    "Entertainment",
   ];
   static const List<String> language = [
     "English",
@@ -146,7 +146,7 @@ class StringsConstants {
     "French",
     "German",
     "Italian",
-    "Portuguese"
+    "Portuguese",
   ];
 
   static const String goalSubtitle = 'Define what you aim to achieve.';
@@ -166,7 +166,7 @@ class StringsConstants {
     SocialMediaEnums.thread: "assets/images/thread_light.png",
     SocialMediaEnums.pinterest: "assets/images/pin_light.png",
     SocialMediaEnums.tiktok: "assets/images/tt_light.png",
-    SocialMediaEnums.telegram: "assets/images/tele_light.png"
+    SocialMediaEnums.telegram: "assets/images/tele_light.png",
   };
 
   static const Map<SocialMediaEnums, dynamic> socialIconsDark = {
@@ -179,7 +179,7 @@ class StringsConstants {
     SocialMediaEnums.thread: "assets/images/thread_dark.png",
     SocialMediaEnums.pinterest: "assets/images/pin_dark.png",
     SocialMediaEnums.tiktok: "assets/images/tt_dark.png",
-    SocialMediaEnums.telegram: "assets/images/tele_dark.png"
+    SocialMediaEnums.telegram: "assets/images/tele_dark.png",
   };
 
   static const String bannerImage = "assets/images/dummy.png";
@@ -204,7 +204,7 @@ class StringsConstants {
     SocialMediaEnums.tiktok:
         "Define goal | Chose Topic | Pick Tone | Chose Persona | Select language | Generate content | Shorty.AI ",
     SocialMediaEnums.telegram:
-        "Define goal | Chose Topic | Pick Tone | Chose Persona | Select language | Generate content | Shorty.AI "
+        "Define goal | Chose Topic | Pick Tone | Chose Persona | Select language | Generate content | Shorty.AI ",
   };
 
   static const Map<SocialMediaEnums, dynamic> shareEnable = {
@@ -217,12 +217,12 @@ class StringsConstants {
     SocialMediaEnums.thread: false,
     SocialMediaEnums.pinterest: false,
     SocialMediaEnums.tiktok: false,
-    SocialMediaEnums.telegram: false
+    SocialMediaEnums.telegram: false,
   };
 
   static const Map<SocialMediaEnums, dynamic> shareUrl = {
     SocialMediaEnums.twitter: "https://twitter.com/intent/tweet?text=",
     SocialMediaEnums.linkedin:
-        "https://www.linkedin.com/shareArticle?mini=true&text="
+        "https://www.linkedin.com/shareArticle?mini=true&text=",
   };
 }

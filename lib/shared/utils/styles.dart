@@ -7,7 +7,7 @@ String titleFont = GoogleFonts.poppins().fontFamily!;
 String headerFont = GoogleFonts.poppins().fontFamily!;
 
 final kTitleStyle = TextStyle(
-  fontFamily: GoogleFonts.oswald().fontFamily,
+  fontFamily: GoogleFonts.bebasNeue().fontFamily,
   color: darkColor,
   fontSize: 40.0,
   fontWeight: FontWeight.bold,
@@ -24,11 +24,12 @@ final kTitleStyleSmall = TextStyle(
 );
 
 final kQuoteStyle = TextStyle(
-    fontFamily: titleFont,
-    color: darkColor,
-    fontSize: 16.0,
-    letterSpacing: 0.4,
-    fontStyle: FontStyle.italic);
+  fontFamily: titleFont,
+  color: darkColor,
+  fontSize: 16.0,
+  letterSpacing: 0.4,
+  fontStyle: FontStyle.italic,
+);
 
 final kHeaderStyle = TextStyle(
   fontFamily: titleFont,

@@ -59,6 +59,7 @@ dependencies:
   network_monitor_cp: ^0.0.4
   twitter_login: ^4.4.2
   app_links: ^6.4.0
+  carousel_slider: ^5.0.0
 
 dev_dependencies:
   flutter_test:

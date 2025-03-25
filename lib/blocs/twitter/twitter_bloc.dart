@@ -22,7 +22,7 @@ class TwitterBloc extends Bloc<TwitterEvent, TwitterState> {
   ) async {
     try {
       emit(TwitterLoading());
-      await Future.delayed(const Duration(seconds: 2));
+      // await Future.delayed(const Duration(seconds: 5));
       List<String> tweets = await twitterRepositoryImpl.generateGPTContent(
         topic: event.topic,
         style: event.style,

@@ -185,7 +185,7 @@ class ReadMoreTextState extends State<ReadMoreText> {
     return BlocBuilder<TwitterBloc, TwitterState>(
       // buildWhen: (previous, current) => current is GeneratedTweets,
       builder: (context, state) {
-        if (state is LoadingUI) {
+        if (state is TwitterLoading) {
           return LoaderBuilder.buildLoader(
             LoaderType.text,
             count: 4,

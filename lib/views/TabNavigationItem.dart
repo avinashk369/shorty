@@ -17,38 +17,28 @@ class TabNavigationItem {
   });
 
   static List<TabNavigationItem> get items => [
-        TabNavigationItem(
-          page: const HomePage(), // const HomeScreen(),
-          icon: const Icon(
-            Icons.home_outlined,
-            color: greyColor,
-          ),
-          title: StringsConstants.home,
-          selectedIcon: const Icon(
-            Icons.home,
-          ),
-        ),
-        // TabNavigationItem(
-        //   page: const SizedBox.shrink(), // BookingHistory(),
-        //   icon: const Icon(
-        //     Icons.trending_up,
-        //     color: greyColor,
-        //   ),
-        //   title: StringsConstants.bookings,
-        //   selectedIcon: const Icon(
-        //     Icons.trending_up,
-        //   ),
-        // ),
-        TabNavigationItem(
-          page: UserSettings(),
-          icon: const Icon(
-            Icons.settings_outlined,
-            color: greyColor,
-          ),
-          title: StringsConstants.settings,
-          selectedIcon: const Icon(
-            Icons.settings,
-          ),
-        ),
-      ];
+    TabNavigationItem(
+      page: HomePage(), // const HomeScreen(),
+      icon: const Icon(Icons.home_outlined, color: greyColor),
+      title: StringsConstants.home,
+      selectedIcon: const Icon(Icons.home),
+    ),
+    // TabNavigationItem(
+    //   page: const SizedBox.shrink(), // BookingHistory(),
+    //   icon: const Icon(
+    //     Icons.trending_up,
+    //     color: greyColor,
+    //   ),
+    //   title: StringsConstants.bookings,
+    //   selectedIcon: const Icon(
+    //     Icons.trending_up,
+    //   ),
+    // ),
+    TabNavigationItem(
+      page: UserSettings(),
+      icon: const Icon(Icons.settings_outlined, color: greyColor),
+      title: StringsConstants.settings,
+      selectedIcon: const Icon(Icons.settings),
+    ),
+  ];
 }

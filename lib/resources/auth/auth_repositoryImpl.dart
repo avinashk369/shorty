@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:app_links/app_links.dart';
 import 'package:shorty/models/ServerError.dart';
 import 'package:shorty/models/user/user_model.dart';
 import 'package:shorty/resources/auth/auth_repository.dart';
@@ -12,6 +13,41 @@ import 'package:twitter_login/twitter_login.dart';
 class AuthRepositoryimpl extends AuthRepository {
   /// get firebase instance
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  final AppLinks _appLinks = AppLinks();
+  StreamSubscription? _linkSubscription;
+
+  // Initialize deep link handling for Twitter
+  Future<void> initDeepLinkListener() async {
+    final initialUri = await _appLinks.getInitialLink();
+    if (initialUri != null) {
+      _handleTwitterCallback(initialUri);
+    }
+
+    _linkSubscription = _appLinks.uriLinkStream.listen(
+      (Uri? uri) {
+        if (uri != null) {
+          _handleTwitterCallback(uri);
+        }
+      },
+      onError: (err) {
+        print('Deep link error: $err');
+      },
+    );
+  }
+
+  void disposeDeepLinkListener() {
+    _linkSubscription?.cancel();
+  }
+
+  void _handleTwitterCallback(Uri uri) {
+    if (uri.scheme == 'shorty-ai') {
+      final authToken = uri.queryParameters['auth_token'];
+      if (authToken != null) {
+        print('Received Twitter callback: token=$authToken');
+      }
+    }
+  }
 
   @override
   Future<UserModel> googleLogin() async {
@@ -95,7 +131,8 @@ class AuthRepositoryimpl extends AuthRepository {
   Future<UserModel> twitterLogin() async {
     User? user;
     try {
-      if (Platform.isIOS) {
+      await initDeepLinkListener();
+      if (Platform.isAndroid) {
         final TwitterLogin twitterLogin = TwitterLogin(
           apiKey: "J0fVl1NJULe1T2oXIy0QkJwV2",
           apiSecretKey: "OfOP399uLdDofLp3iRrnx11wBG99mlbUmVTa0Apo2BByUi2l98",
@@ -211,8 +248,8 @@ class AuthRepositoryimpl extends AuthRepository {
         );
       }
 
-      final UserCredential linkedUserCredential = await _auth.currentUser!
-          .linkWithCredential(credential);
+      final UserCredential linkedUserCredential =
+          await _auth.currentUser!.linkWithCredential(credential);
 
       return linkedUserCredential;
     } on FirebaseAuthException catch (e) {

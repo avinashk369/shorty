@@ -99,8 +99,9 @@ class TwitterRepositoryImpl extends TwitterRepository {
         'redirect_uri': dotenv.env['TWITTER_CALLBACK_URL'],
         'code_verifier': codeVerifier,
       };
-      final Map<String, dynamic> response =
-          await apiClient.getTwitterToken(data);
+      final Map<String, dynamic> response = await apiClient.getTwitterToken(
+        data,
+      );
 
       if (response.isNotEmpty) {
         print("twitter token ${response['access_token']}");
@@ -118,27 +119,26 @@ class TwitterRepositoryImpl extends TwitterRepository {
 
   String _generateCodeVerifier() {
     final random = Random.secure();
-    return base64UrlEncode(List<int>.generate(32, (_) => random.nextInt(256)))
-        .replaceAll('+', '-')
-        .replaceAll('/', '_')
-        .replaceAll('=', '');
+    return base64UrlEncode(
+      List<int>.generate(32, (_) => random.nextInt(256)),
+    ).replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
   }
 
   String _generateCodeChallenge(String codeVerifier) {
     final bytes = utf8.encode(codeVerifier);
     final digest = sha256.convert(bytes);
-    return base64UrlEncode(digest.bytes)
-        .replaceAll('+', '-')
-        .replaceAll('/', '_')
-        .replaceAll('=', '');
+    return base64UrlEncode(
+      digest.bytes,
+    ).replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
   }
 
   @override
-  Future<List<String>> generateGPTContent(
-      {required String topic,
-      required String style,
-      required String persona,
-      required String userInput}) async {
+  Future<List<String>> generateGPTContent({
+    required String topic,
+    required String style,
+    required String persona,
+    required String userInput,
+  }) async {
     try {
       // Compose the system message and user message
 
@@ -149,7 +149,7 @@ class TwitterRepositoryImpl extends TwitterRepository {
         "model": "gpt-3.5-turbo",
         "messages": [
           {"role": "system", "content": systemMessage},
-          {"role": "user", "content": userInput}
+          {"role": "user", "content": userInput},
         ],
         "max_tokens": 100, // Adjust to control output length (approx 300 chars)
         "temperature": 0.7,
@@ -159,7 +159,9 @@ class TwitterRepositoryImpl extends TwitterRepository {
       // Send the API request
 
       final response = await apiClient.generateTweet(
-          "Bearer ${dotenv.env['OPEN_AI_KEY'] ?? ''}", requestBody);
+        "Bearer ${dotenv.env['OPEN_AI_KEY'] ?? ''}",
+        requestBody,
+      );
 
       List<String> generatedResponses = [];
 
@@ -178,8 +180,9 @@ class TwitterRepositoryImpl extends TwitterRepository {
 
   String getSystemMessage(String persona, String topic, String style) {
     // Fetch the system message from Remote Config
-    final systemMessageTemplate =
-        FirebaseRemoteConfigService().getString('system_message_prompt');
+    final systemMessageTemplate = FirebaseRemoteConfigService().getString(
+      'system_message_prompt',
+    );
 
     // Use the template to fill in persona, topic, and style dynamically
     return systemMessageTemplate

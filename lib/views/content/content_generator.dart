@@ -8,6 +8,8 @@ import 'package:shorty/models/content/content_model.dart';
 import 'package:shorty/models/prompt/prompt_model.dart';
 import 'package:shorty/resources/twitter/twitter_repositoryImpl.dart';
 import 'package:shorty/shared/extensions/widget_modifier.dart';
+import 'package:shorty/shared/utils/app_colors.dart';
+import 'package:shorty/shared/utils/app_const.dart';
 import 'package:shorty/shared/utils/draggable_bottom_sheet.dart';
 import 'package:shorty/shared/utils/social_media_enums.dart';
 import 'package:shorty/shared/utils/utils.dart';
@@ -169,10 +171,10 @@ class _ContentGeneratorState extends State<ContentGenerator> {
                   Expanded(
                     child: ChatInput(
                       controller: promptController,
-                      hintText: "Ask shorty.AI to write",
+                      hintText: AppConst.hintText,
                       suffixIcon: BlocBuilder<TwitterBloc, TwitterState>(
                         builder: (context, state) {
-                          if (state is LoadingUI) {
+                          if (state is TwitterLoading) {
                             return Icon(Icons.stop, color: secondaryLight);
                           }
                           return Icon(
@@ -443,14 +445,15 @@ class _ContentGeneratorState extends State<ContentGenerator> {
 
   Widget userInput(String userInput) => Container(
     width: MediaQuery.of(context).size.width,
+    margin: EdgeInsets.only(left: 32),
     padding: EdgeInsets.all(8),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.all(Radius.circular(4)),
-      color: darkColor,
+      color: AppColors.divider.withValues(alpha: 0.2),
     ),
     child: Text(
       userInput.trim(),
-      style: kLabelStyle.copyWith(color: secondaryLight),
+      style: kLabelStyle.copyWith(color: AppColors.background),
     ),
   );
 

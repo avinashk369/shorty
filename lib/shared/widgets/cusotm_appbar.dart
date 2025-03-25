@@ -16,23 +16,23 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      scrolledUnderElevation: 0,
+      forceMaterialTransparency: true,
       title: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           // Text(title),
           Image(
-            image: AssetImage(
-              'assets/images/logo.png',
-            ),
+            image: AssetImage('assets/images/logo.png'),
             fit: BoxFit.contain,
             width: 100,
           ),
           subtitle
               ? Text(
-                  StringsConstants.appName,
-                  style: kLabelStyleBold.copyWith(color: greyColor),
-                )
+                StringsConstants.appName,
+                style: kLabelStyleBold.copyWith(color: greyColor),
+              )
               : const SizedBox.shrink(),
         ],
       ),

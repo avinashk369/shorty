@@ -23,11 +23,10 @@ class FbCard implements SocialCard {
                 color: Colors.amber[400],
                 shadowColor: Colors.grey,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: Image(
-                  image: AssetImage(
-                    'assets/images/icon.png',
-                  ),
+                  image: AssetImage('assets/images/icon.png'),
                   fit: BoxFit.contain,
                   width: 40,
                   height: 40,
@@ -38,7 +37,7 @@ class FbCard implements SocialCard {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Shorty.AI",
+                    AppConst.appName,
                     style: kLabelStyleBold.copyWith(fontSize: 14),
                   ),
                   SizedBox(height: 4),
@@ -71,9 +70,7 @@ class FbCard implements SocialCard {
           SizedBox(
             width: double.infinity,
             child: Image(
-              image: AssetImage(
-                StringsConstants.bannerImage,
-              ),
+              image: AssetImage(StringsConstants.bannerImage),
               fit: BoxFit.cover,
               height: MediaQuery.of(context).size.height * .4,
               width: double.infinity,
@@ -90,27 +87,30 @@ class FbCard implements SocialCard {
                   Text(
                     'Like',
                     style: kLabelStyleBold.copyWith(
-                        fontSize: 11, color: greyColor),
+                      fontSize: 11,
+                      color: greyColor,
+                    ),
                   ),
                 ],
               ),
               Row(
                 children: [
-                  Icon(
-                    Icons.message_outlined,
-                  ),
+                  Icon(Icons.message_outlined),
                   const SizedBox(width: 4),
                   Text(
                     'Comment',
                     style: kLabelStyleBold.copyWith(
-                        fontSize: 11, color: greyColor),
+                      fontSize: 11,
+                      color: greyColor,
+                    ),
                   ),
                 ],
               ),
               ShareCopy(
-                  handleName: handleName,
-                  onShare: (cnt) => onShare(cnt),
-                  content: content),
+                handleName: handleName,
+                onShare: (cnt) => onShare(cnt),
+                content: content,
+              ),
             ],
           ),
         ],
