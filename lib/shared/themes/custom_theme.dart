@@ -36,7 +36,7 @@ class CustomTheme with ChangeNotifier {
       bottomSheetTheme: BottomSheetThemeData(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
       ),
-      tabBarTheme: const TabBarTheme(
+      tabBarTheme: const TabBarThemeData(
         unselectedLabelColor: greyColor,
         labelColor: primaryLight,
         indicator: UnderlineTabIndicator(
