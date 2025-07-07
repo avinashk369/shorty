@@ -34,11 +34,9 @@ class CustomTheme with ChangeNotifier {
         systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
       bottomSheetTheme: BottomSheetThemeData(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(0),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
       ),
-      tabBarTheme: const TabBarTheme(
+      tabBarTheme: const TabBarThemeData(
         unselectedLabelColor: greyColor,
         labelColor: primaryLight,
         indicator: UnderlineTabIndicator(
@@ -49,37 +47,34 @@ class CustomTheme with ChangeNotifier {
         backgroundColor: secondaryLight,
       ),
       inputDecorationTheme: const InputDecorationTheme(
-        border: UnderlineInputBorder(
+        border: UnderlineInputBorder(borderSide: BorderSide(color: greyColor)),
+        enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: greyColor),
         ),
-        enabledBorder:
-            OutlineInputBorder(borderSide: BorderSide(color: greyColor)),
-        errorBorder:
-            OutlineInputBorder(borderSide: BorderSide(color: redColor)),
-        focusedBorder:
-            OutlineInputBorder(borderSide: BorderSide(color: greyColor)),
-        focusedErrorBorder:
-            OutlineInputBorder(borderSide: BorderSide(color: redColor)),
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: redColor),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: greyColor),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: redColor),
+        ),
         fillColor: Colors.transparent,
       ),
       hintColor: greyColor,
       navigationBarTheme: NavigationBarThemeData(
         indicatorColor: primaryLight,
         iconTheme: WidgetStateProperty.resolveWith(
-          (states) => states.contains(WidgetState.selected)
-              ? const IconThemeData(color: secondaryLight)
-              : const IconThemeData(color: secondaryLight),
+          (states) =>
+              states.contains(WidgetState.selected)
+                  ? const IconThemeData(color: secondaryLight)
+                  : const IconThemeData(color: secondaryLight),
         ),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        selectedLabelStyle: TextStyle(
-          color: primaryLight,
-          fontSize: 14,
-        ),
-        unselectedLabelStyle: TextStyle(
-          color: greyColor,
-          fontSize: 12,
-        ),
+        selectedLabelStyle: TextStyle(color: primaryLight, fontSize: 14),
+        unselectedLabelStyle: TextStyle(color: greyColor, fontSize: 12),
         backgroundColor: secondaryLight,
         elevation: 0,
         selectedItemColor: secondaryLight,
@@ -87,14 +82,8 @@ class CustomTheme with ChangeNotifier {
         showSelectedLabels: false,
         showUnselectedLabels: false,
         type: BottomNavigationBarType.fixed,
-        unselectedIconTheme: IconThemeData(
-          color: greyColor,
-          size: 22,
-        ),
-        selectedIconTheme: IconThemeData(
-          color: primaryLight,
-          size: 25,
-        ),
+        unselectedIconTheme: IconThemeData(color: greyColor, size: 22),
+        selectedIconTheme: IconThemeData(color: primaryLight, size: 25),
       ),
       brightness: Brightness.light,
       fontFamily: GoogleFonts.lato().fontFamily,
@@ -103,47 +92,44 @@ class CustomTheme with ChangeNotifier {
         displayMedium: kTitleStyleSmall.copyWith(color: darkColor),
         displaySmall: kQuoteStyle.copyWith(color: darkColor),
         bodySmall: kLabelStyle.copyWith(color: darkColor),
-        bodyLarge: const TextStyle(
-          color: darkColor,
-          fontSize: 18,
-        ),
-        titleMedium: const TextStyle(
-          color: darkColor,
-          fontSize: 14,
-        ),
+        bodyLarge: const TextStyle(color: darkColor, fontSize: 18),
+        titleMedium: const TextStyle(color: darkColor, fontSize: 14),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
-          style: OutlinedButton.styleFrom(
-        foregroundColor: secondaryLight,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
-        //minimumSize: Size(Get.height * .2, Get.height * .07),
-        //elevation: 1,
-        textStyle: const TextStyle(fontSize: 18),
-        side: const BorderSide(color: secondaryLight, width: 1),
-      )),
+        style: OutlinedButton.styleFrom(
+          foregroundColor: secondaryLight,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(3.0),
+          ),
+          //minimumSize: Size(Get.height * .2, Get.height * .07),
+          //elevation: 1,
+          textStyle: const TextStyle(fontSize: 18),
+          side: const BorderSide(color: secondaryLight, width: 1),
+        ),
+      ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           foregroundColor: secondaryLight,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-          backgroundColor: primaryLight,
-          textStyle: kLabelStyleBold.copyWith(
-            fontSize: 16,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5.0),
           ),
+          backgroundColor: primaryLight,
+          textStyle: kLabelStyleBold.copyWith(fontSize: 16),
         ),
       ),
       buttonTheme: ButtonThemeData(
         // 4
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18.0),
+        ),
         buttonColor: secondaryLight,
       ),
       colorScheme: ColorScheme.fromSwatch()
-          .copyWith(
-            secondary: secondaryLight,
-            brightness: Brightness.light,
-          )
-          .copyWith(background: Colors.white),
+          .copyWith(secondary: secondaryLight, brightness: Brightness.light)
+          .copyWith(surface: Colors.white),
+      textSelectionTheme: TextSelectionThemeData(
+        selectionHandleColor: Colors.transparent,
+      ),
     );
   }
 

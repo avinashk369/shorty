@@ -47,7 +47,8 @@ class Shorty extends StatelessWidget {
           navigatorObservers: [NetworkAwareNavigatorObserver()],
           title: StringsConstants.appName,
           initialRoute: homeRoute,
-          onGenerateRoute: RouteGenerator.generateRoute,
+          onGenerateRoute: (route) =>
+              RouteGenerator.generateRoute(route, context),
           debugShowCheckedModeBanner: false,
           theme: CustomTheme.lightTheme,
         ),

@@ -26,10 +26,15 @@ class _UserAuthState extends State<UserAuth> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 20),
-              const SizedBox(
-                height: 35,
-              ),
+              const SizedBox(height: 35),
               GoogleSignInButton(),
+              const SizedBox(height: 32),
+              ElevatedButton(
+                onPressed: () {
+                  context.read<AuthBloc>().add(TwitterLogin());
+                },
+                child: Text("Twitter"),
+              ),
               const Spacer(),
               Tnc().horizontalPadding(4).bottomPadding(10),
             ],

@@ -3,6 +3,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:shorty/shared/extensions/widget_modifier.dart';
 import 'package:shorty/shared/social_card/share_copy.dart';
+import 'package:shorty/shared/utils/app_const.dart';
 import 'package:shorty/shared/utils/social_media_enums.dart';
 import 'package:shorty/shared/utils/utils.dart';
 import 'package:shorty/shared/widgets/read_more.dart';
@@ -22,29 +23,17 @@ part 'yt_card.dart';
 
 abstract class SocialCard {
   factory SocialCard(SocialMediaEnums socialMediaName) {
-    switch (socialMediaName) {
-      case SocialMediaEnums.facebook:
-        return FbCard();
-      case SocialMediaEnums.instagram:
-        return InstaCard();
-      case SocialMediaEnums.pinterest:
-        return PinterestCard();
-      case SocialMediaEnums.twitter:
-        return TwitterCard();
-      case SocialMediaEnums.linkedin:
-        return InCard();
-      case SocialMediaEnums.thread:
-        return ThreadCard();
-      case SocialMediaEnums.youtube:
-        return YtCard();
-      case SocialMediaEnums.tiktok:
-        return TikTokCard();
-      case SocialMediaEnums.whatsapp:
-      case SocialMediaEnums.telegram:
-        return WhatsappCard();
-      default:
-        return TwitterCard();
-    }
+    return switch (socialMediaName) {
+      SocialMediaEnums.facebook => FbCard(),
+      SocialMediaEnums.instagram => InstaCard(),
+      SocialMediaEnums.pinterest => PinterestCard(),
+      SocialMediaEnums.twitter => TwitterCard(),
+      SocialMediaEnums.linkedin => InCard(),
+      SocialMediaEnums.thread => ThreadCard(),
+      SocialMediaEnums.youtube => YtCard(),
+      SocialMediaEnums.tiktok => TikTokCard(),
+      SocialMediaEnums.whatsapp || SocialMediaEnums.telegram => WhatsappCard(),
+    };
   }
   Widget build({
     required BuildContext context,

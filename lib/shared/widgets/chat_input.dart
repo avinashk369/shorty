@@ -54,7 +54,7 @@ class _ChatInputInputState extends State<ChatInput> {
         keyboardType: TextInputType.multiline,
         cursorColor: greyColor,
         textCapitalization: TextCapitalization.sentences,
-        enableInteractiveSelection: false,
+        enableInteractiveSelection: true,
         decoration: InputDecoration(
           hintText: widget.hintText,
           hintStyle: kLabelStyle.copyWith(color: greyColor),
@@ -64,10 +64,7 @@ class _ChatInputInputState extends State<ChatInput> {
           prefixIcon: InkWell(
             splashFactory: NoSplash.splashFactory,
             onTap: () => widget.showPrompt?.call(),
-            child: Image.asset(
-              "assets/images/ai.png",
-              color: primaryLight,
-            ),
+            child: Image.asset("assets/images/ai.png", color: primaryLight),
           ),
           suffixIcon: InkWell(
             splashFactory: NoSplash.splashFactory,

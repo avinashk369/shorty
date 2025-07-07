@@ -7,14 +7,16 @@ part 'settings_state.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   SettingsBloc() : super(const SettingsInitializing()) {
-    on<SettingsEvent>(
-      (event, emit) async {
-        await event.map(
-          selectTopic: (event) async => await _selectTopic(event, emit),
-          toggleExpandable: (event) async => await _toggle(event, emit),
-        );
-      },
-    );
+    // on<SettingsEvent>(
+    //   (event, emit) async {
+    //     await event.map(
+    //       selectTopic: (event) async => await _selectTopic(event, emit),
+    //       toggleExpandable: (event) async => await _toggle(event, emit),
+    //     );
+    //   },
+    // );
+    on<SelectTopic>(_selectTopic);
+    on<ToggleExpandable>(_toggle);
   }
 
   bool _isExpanded = false;
@@ -31,8 +33,9 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         _isStyleExpanded = !_isStyleExpanded;
       }
       if (event.choice case Choice.persona) {
-        emit(PersonaToggled(
-            choice: event.choice, isToggled: !_isPersonaExpanded));
+        emit(
+          PersonaToggled(choice: event.choice, isToggled: !_isPersonaExpanded),
+        );
         _isPersonaExpanded = !_isPersonaExpanded;
       }
       if (event.choice case Choice.topic) {
@@ -44,8 +47,12 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         _isGoalExpanded = !_isGoalExpanded;
       }
       if (event.choice case Choice.language) {
-        emit(LanguageToggled(
-            choice: event.choice, isToggled: !_isLanguageExpanded));
+        emit(
+          LanguageToggled(
+            choice: event.choice,
+            isToggled: !_isLanguageExpanded,
+          ),
+        );
         _isLanguageExpanded = !_isLanguageExpanded;
       }
     } catch (e) {

@@ -8,11 +8,14 @@ import 'package:shorty/models/content/content_model.dart';
 import 'package:shorty/models/prompt/prompt_model.dart';
 import 'package:shorty/resources/twitter/twitter_repositoryImpl.dart';
 import 'package:shorty/shared/extensions/widget_modifier.dart';
+import 'package:shorty/shared/utils/app_colors.dart';
+import 'package:shorty/shared/utils/app_const.dart';
 import 'package:shorty/shared/utils/draggable_bottom_sheet.dart';
 import 'package:shorty/shared/utils/social_media_enums.dart';
 import 'package:shorty/shared/utils/utils.dart';
 import 'package:shorty/shared/widgets/chat_input.dart';
 import 'package:shorty/shared/widgets/custom_input.dart';
+import 'package:shorty/shared/widgets/loading_ui.dart';
 import 'package:shorty/views/dashboard/pages/content_banner.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -38,15 +41,20 @@ class _ContentGeneratorState extends State<ContentGenerator> {
     promptController = TextEditingController();
     hashTagController = TextEditingController();
     contentController = TextEditingController();
-    promptModel = PromptModel.fromJson(jsonDecode(FirebaseRemoteConfig.instance
-        .getString(StringsConstants.samplePrompt)));
+    promptModel = PromptModel.fromJson(
+      jsonDecode(
+        FirebaseRemoteConfig.instance.getString(StringsConstants.samplePrompt),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => TwitterBloc(
-          twitterRepositoryImpl: context.read<TwitterRepositoryImpl>()),
+      create:
+          (context) => TwitterBloc(
+            twitterRepositoryImpl: context.read<TwitterRepositoryImpl>(),
+          ),
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
@@ -58,28 +66,28 @@ class _ContentGeneratorState extends State<ContentGenerator> {
         body: CustomScrollView(
           slivers: [
             SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  const SizedBox(height: 24),
-                  BlocBuilder<TwitterBloc, TwitterState>(
-                      builder: (context, state) {
-                    return state.maybeMap(
-                      // loading: (value) => const LoadingUI(),
-                      generatedTweets: (value) => ContentBanner(
+              delegate: SliverChildListDelegate([
+                const SizedBox(height: 24),
+                BlocBuilder<TwitterBloc, TwitterState>(
+                  builder: (context, state) {
+                    if (state is GeneratedTweets) {
+                      return ContentBanner(
                         contents: [
-                          ...value.generatedTweet.map(
-                              (contents) => ContentModel(content: contents))
+                          ...state.generatedTweet.map(
+                            (contents) => ContentModel(content: contents),
+                          ),
                         ],
                         source: widget.socialMediaEnums,
                         onShare: (content) async {
-                          if (StringsConstants
-                              .shareEnable[widget.socialMediaEnums]) {
+                          if (StringsConstants.shareEnable[widget
+                              .socialMediaEnums]) {
                             String testUrl =
                                 "${StringsConstants.shareUrl[widget.socialMediaEnums]}$content";
                             await _launchUrl(testUrl);
                           } else {
                             await Clipboard.setData(
-                                ClipboardData(text: content));
+                              ClipboardData(text: content),
+                            );
                             if (!context.mounted) return;
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
@@ -97,23 +105,25 @@ class _ContentGeneratorState extends State<ContentGenerator> {
                             );
                           }
                         },
-                      ),
-                      orElse: () => ContentBanner(
-                        contents: [
-                          ContentModel(
-                            content: getSamplePrompt(widget.socialMediaEnums)[
-                                Utility.randomIndex(size: 3)],
-                          ),
-                        ],
-                        source: widget.socialMediaEnums,
-                        onShare: (content) {},
-                        showIndicator: false,
-                      ),
+                      );
+                    }
+                    return ContentBanner(
+                      contents: [
+                        ContentModel(
+                          content:
+                              getSamplePrompt(
+                                widget.socialMediaEnums,
+                              )[Utility.randomIndex(size: 3)],
+                        ),
+                      ],
+                      source: widget.socialMediaEnums,
+                      onShare: (content) {},
+                      showIndicator: false,
                     );
-                  }),
-                  const SizedBox(height: 16),
-                ],
-              ),
+                  },
+                ),
+                const SizedBox(height: 16),
+              ]),
             ),
             SliverFillRemaining(
               hasScrollBody: false,
@@ -128,22 +138,23 @@ class _ContentGeneratorState extends State<ContentGenerator> {
                     children: [
                       const Spacer(),
                       BlocConsumer<TwitterBloc, TwitterState>(
-                          listenWhen: (previous, current) =>
-                              current is GeneratedTweets,
-                          listener: (context, state) => state.mapOrNull(
-                                generatedTweets: (value) =>
-                                    promptController.clear(),
-                              ),
-                          buildWhen: (previous, current) =>
-                              current is GeneratedTweets,
-                          builder: (context, state) {
-                            return state.maybeMap(
-                              generatedTweets: (value) =>
-                                  userInput(value.userInput),
-                              orElse: () => const SizedBox.shrink(),
-                            );
-                          }),
-                      const SizedBox(height: 16)
+                        listenWhen:
+                            (previous, current) => current is GeneratedTweets,
+                        listener: (context, state) {
+                          if (state is GeneratedTweets) {
+                            promptController.clear();
+                          }
+                        },
+                        buildWhen:
+                            (previous, current) => current is GeneratedTweets,
+                        builder: (context, state) {
+                          if (state is GeneratedTweets) {
+                            return userInput(state.userInput);
+                          }
+                          return const SizedBox.shrink();
+                        },
+                      ),
+                      const SizedBox(height: 16),
                     ],
                   ),
                 ),
@@ -151,219 +162,272 @@ class _ContentGeneratorState extends State<ContentGenerator> {
             ),
           ],
         ),
-        bottomSheet: Builder(builder: (context) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: ChatInput(
-                    controller: promptController,
-                    hintText: "Ask shorty.AI to write",
-                    suffixIcon: BlocBuilder<TwitterBloc, TwitterState>(
-                      builder: (context, state) => state.maybeMap(
-                        loading: (value) => Icon(
-                          Icons.stop,
-                          color: secondaryLight,
-                        ),
-                        orElse: () => Icon(
-                          Icons.arrow_upward_outlined,
-                          color: secondaryLight,
-                        ),
+        bottomSheet: Builder(
+          builder: (context) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: ChatInput(
+                      controller: promptController,
+                      hintText: AppConst.hintText,
+                      suffixIcon: BlocBuilder<TwitterBloc, TwitterState>(
+                        builder: (context, state) {
+                          if (state is TwitterLoading) {
+                            return Icon(Icons.stop, color: secondaryLight);
+                          }
+                          return Icon(
+                            Icons.arrow_upward_outlined,
+                            color: secondaryLight,
+                          );
+                        },
                       ),
-                    ),
-                    onSend: () {
-                      if (promptController.text.trim().isNotEmpty) {
-                        context.read<TwitterBloc>().add(
-                              GenerateTweet(
-                                topic: _getPreferenceValue(
-                                    StringsConstants.topics,
-                                    PreferenceUtils.getInt(
-                                        StringsConstants.selectedTopic)),
-                                style: _getPreferenceValue(
-                                    StringsConstants.styles,
-                                    PreferenceUtils.getInt(
-                                        StringsConstants.selectedStyle)),
-                                persona: _getPreferenceValue(
-                                    StringsConstants.persona,
-                                    PreferenceUtils.getInt(
-                                        StringsConstants.selectedPersona)),
-                                userInput: promptController.text,
-                                goal: _getPreferenceValue(
-                                    StringsConstants.goals,
-                                    PreferenceUtils.getInt(
-                                        StringsConstants.selectedGoal)),
-                                language: _getPreferenceValue(
-                                    StringsConstants.language,
-                                    PreferenceUtils.getInt(
-                                        StringsConstants.selectedLanguage)),
-                              ),
-                            );
-                      }
-                    },
-                    showPrompt: () => showModalBottomSheet(
-                        context: context,
-                        enableDrag: true,
-                        isScrollControlled: true,
-                        backgroundColor: Colors.transparent,
-                        builder: (context) {
-                          return DraggableBottomSheet(context).buildSheet(
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "# Hashtags count",
-                                          style: kLabelStyleBold.copyWith(),
-                                        ),
-                                        const SizedBox(height: 2),
-                                        Text(
-                                          "Hashtags will be included",
-                                          style: kLabelStyle.copyWith(
-                                              fontSize: 11, color: greyColor),
-                                        ).leftPadding(18),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      width: 100,
-                                      child: CustomInput(
-                                        hintText: FirebaseRemoteConfig.instance
-                                            .getInt(
-                                                StringsConstants.maxHashcode)
-                                            .toString(),
-                                        onChanged: (v) {},
-                                        maxLength: 1,
-                                        textInputType: TextInputType.phone,
-                                        focusNode: FocusNode()..hasFocus,
-                                        validator: (p0) =>
-                                            ((int.tryParse(p0 ?? "0") ?? 0) >
-                                                    FirebaseRemoteConfig
-                                                        .instance
-                                                        .getInt(StringsConstants
-                                                            .maxHashcode))
-                                                ? "Max limit exceeded"
-                                                : null,
-                                        textController: hashTagController,
-                                      ),
-                                    ),
-                                  ],
-                                ).horizontalPadding(10),
-                                const SizedBox(height: 10),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "# Words count",
-                                          style: kLabelStyleBold.copyWith(),
-                                        ),
-                                        const SizedBox(height: 2),
-                                        Text(
-                                          "Content message length",
-                                          style: kLabelStyle.copyWith(
-                                              fontSize: 11, color: greyColor),
-                                        ).leftPadding(18),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      width: 100,
-                                      child: CustomInput(
-                                          hintText: FirebaseRemoteConfig
-                                              .instance
-                                              .getInt(StringsConstants
-                                                  .maxContentLength)
-                                              .toString(),
-                                          maxLength: 3,
-                                          textInputType: TextInputType.phone,
-                                          focusNode: FocusNode(),
-                                          validator: (p0) => ((int.tryParse(
-                                                          p0 ?? "0") ??
-                                                      0) >
-                                                  FirebaseRemoteConfig.instance
-                                                      .getInt(StringsConstants
-                                                          .maxContentLength))
-                                              ? "Max limit exceeded"
-                                              : null,
-                                          onChanged: (v) {},
-                                          textController: contentController),
-                                    ),
-                                  ],
-                                ).horizontalPadding(10),
-                                const SizedBox(height: 30),
-                                Text(
-                                  "Try one of the sample prompt",
-                                  style: kLabelStyleBold.copyWith(),
-                                ).horizontalPadding(8),
-                                const SizedBox(height: 16),
-                                ListView.separated(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) => Material(
-                                    child: ListTile(
-                                      leading: Container(
-                                        width: 4,
-                                        color: primaryLight,
-                                      ),
-                                      contentPadding: EdgeInsets.zero,
-                                      minLeadingWidth: 10,
-                                      tileColor: greyColor.withOpacity(.1),
-                                      style: ListTileStyle.list,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(4)),
-                                      onTap: () {
-                                        PreferenceUtils.putInt(
-                                            StringsConstants.maxContentLength,
-                                            int.tryParse(
-                                                    contentController.text) ??
-                                                FirebaseRemoteConfig.instance
-                                                    .getInt(StringsConstants
-                                                        .maxContentLength));
-                                        PreferenceUtils.putInt(
-                                            StringsConstants.maxHashcode,
-                                            int.tryParse(
-                                                    hashTagController.text) ??
-                                                FirebaseRemoteConfig.instance
-                                                    .getInt(StringsConstants
-                                                        .maxHashcode));
-                                        promptController.text = getSamplePrompt(
-                                            widget.socialMediaEnums)[index];
-                                        Navigator.of(context).maybePop();
-                                      },
-                                      title: Text(
-                                        getSamplePrompt(
-                                            widget.socialMediaEnums)[index],
-                                        style: kLabelStyle.copyWith(),
-                                      ),
-                                    ).horizontalPadding(8),
-                                  ),
-                                  itemCount:
-                                      getSamplePrompt(widget.socialMediaEnums)
-                                          .length,
-                                  separatorBuilder: (_, __) =>
-                                      const SizedBox(height: 8),
+                      onSend: () {
+                        if (promptController.text.trim().isNotEmpty) {
+                          context.read<TwitterBloc>().add(
+                            GenerateTweet(
+                              topic: _getPreferenceValue(
+                                StringsConstants.topics,
+                                PreferenceUtils.getInt(
+                                  StringsConstants.selectedTopic,
                                 ),
-                              ],
+                              ),
+                              style: _getPreferenceValue(
+                                StringsConstants.styles,
+                                PreferenceUtils.getInt(
+                                  StringsConstants.selectedStyle,
+                                ),
+                              ),
+                              persona: _getPreferenceValue(
+                                StringsConstants.persona,
+                                PreferenceUtils.getInt(
+                                  StringsConstants.selectedPersona,
+                                ),
+                              ),
+                              userInput: promptController.text,
+                              goal: _getPreferenceValue(
+                                StringsConstants.goals,
+                                PreferenceUtils.getInt(
+                                  StringsConstants.selectedGoal,
+                                ),
+                              ),
+                              language: _getPreferenceValue(
+                                StringsConstants.language,
+                                PreferenceUtils.getInt(
+                                  StringsConstants.selectedLanguage,
+                                ),
+                              ),
                             ),
                           );
-                        }),
+                        }
+                      },
+                      showPrompt:
+                          () => showModalBottomSheet(
+                            context: context,
+                            enableDrag: true,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder: (context) {
+                              return DraggableBottomSheet(context).buildSheet(
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "# Hashtags count",
+                                              style: kLabelStyleBold.copyWith(),
+                                            ),
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              "Hashtags will be included",
+                                              style: kLabelStyle.copyWith(
+                                                fontSize: 11,
+                                                color: greyColor,
+                                              ),
+                                            ).leftPadding(18),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          width: 100,
+                                          child: CustomInput(
+                                            hintText:
+                                                FirebaseRemoteConfig.instance
+                                                    .getInt(
+                                                      StringsConstants
+                                                          .maxHashcode,
+                                                    )
+                                                    .toString(),
+                                            onChanged: (v) {},
+                                            maxLength: 1,
+                                            textInputType: TextInputType.phone,
+                                            focusNode: FocusNode()..hasFocus,
+                                            validator:
+                                                (p0) =>
+                                                    ((int.tryParse(p0 ?? "0") ??
+                                                                0) >
+                                                            FirebaseRemoteConfig
+                                                                .instance
+                                                                .getInt(
+                                                                  StringsConstants
+                                                                      .maxHashcode,
+                                                                ))
+                                                        ? "Max limit exceeded"
+                                                        : null,
+                                            textController: hashTagController,
+                                          ),
+                                        ),
+                                      ],
+                                    ).horizontalPadding(10),
+                                    const SizedBox(height: 10),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "# Words count",
+                                              style: kLabelStyleBold.copyWith(),
+                                            ),
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              "Content message length",
+                                              style: kLabelStyle.copyWith(
+                                                fontSize: 11,
+                                                color: greyColor,
+                                              ),
+                                            ).leftPadding(18),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          width: 100,
+                                          child: CustomInput(
+                                            hintText:
+                                                FirebaseRemoteConfig.instance
+                                                    .getInt(
+                                                      StringsConstants
+                                                          .maxContentLength,
+                                                    )
+                                                    .toString(),
+                                            maxLength: 3,
+                                            textInputType: TextInputType.phone,
+                                            focusNode: FocusNode(),
+                                            validator:
+                                                (p0) =>
+                                                    ((int.tryParse(p0 ?? "0") ??
+                                                                0) >
+                                                            FirebaseRemoteConfig
+                                                                .instance
+                                                                .getInt(
+                                                                  StringsConstants
+                                                                      .maxContentLength,
+                                                                ))
+                                                        ? "Max limit exceeded"
+                                                        : null,
+                                            onChanged: (v) {},
+                                            textController: contentController,
+                                          ),
+                                        ),
+                                      ],
+                                    ).horizontalPadding(10),
+                                    const SizedBox(height: 30),
+                                    Text(
+                                      "Try one of the sample prompt",
+                                      style: kLabelStyleBold.copyWith(),
+                                    ).horizontalPadding(8),
+                                    const SizedBox(height: 16),
+                                    ListView.separated(
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemBuilder:
+                                          (context, index) => Material(
+                                            child: ListTile(
+                                              leading: Container(
+                                                width: 4,
+                                                color: primaryLight,
+                                              ),
+                                              contentPadding: EdgeInsets.zero,
+                                              minLeadingWidth: 10,
+                                              tileColor: greyColor.withOpacity(
+                                                .1,
+                                              ),
+                                              style: ListTileStyle.list,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
+                                              ),
+                                              onTap: () {
+                                                PreferenceUtils.putInt(
+                                                  StringsConstants
+                                                      .maxContentLength,
+                                                  int.tryParse(
+                                                        contentController.text,
+                                                      ) ??
+                                                      FirebaseRemoteConfig
+                                                          .instance
+                                                          .getInt(
+                                                            StringsConstants
+                                                                .maxContentLength,
+                                                          ),
+                                                );
+                                                PreferenceUtils.putInt(
+                                                  StringsConstants.maxHashcode,
+                                                  int.tryParse(
+                                                        hashTagController.text,
+                                                      ) ??
+                                                      FirebaseRemoteConfig
+                                                          .instance
+                                                          .getInt(
+                                                            StringsConstants
+                                                                .maxHashcode,
+                                                          ),
+                                                );
+                                                promptController.text =
+                                                    getSamplePrompt(
+                                                      widget.socialMediaEnums,
+                                                    )[index];
+                                                Navigator.of(
+                                                  context,
+                                                ).maybePop();
+                                              },
+                                              title: Text(
+                                                getSamplePrompt(
+                                                  widget.socialMediaEnums,
+                                                )[index],
+                                                style: kLabelStyle.copyWith(),
+                                              ),
+                                            ).horizontalPadding(8),
+                                          ),
+                                      itemCount:
+                                          getSamplePrompt(
+                                            widget.socialMediaEnums,
+                                          ).length,
+                                      separatorBuilder:
+                                          (_, __) => const SizedBox(height: 8),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                    ),
                   ),
-                ),
-              ],
-            ),
-          );
-        }),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -380,16 +444,18 @@ class _ContentGeneratorState extends State<ContentGenerator> {
   }
 
   Widget userInput(String userInput) => Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.all(8),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(4)),
-            color: darkColor),
-        child: Text(
-          userInput.trim(),
-          style: kLabelStyle.copyWith(color: secondaryLight),
-        ),
-      );
+    width: MediaQuery.of(context).size.width,
+    margin: EdgeInsets.only(left: 32),
+    padding: EdgeInsets.all(8),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.all(Radius.circular(4)),
+      color: AppColors.divider.withValues(alpha: 0.2),
+    ),
+    child: Text(
+      userInput.trim(),
+      style: kLabelStyle.copyWith(color: AppColors.background),
+    ),
+  );
 
   List<String> getSamplePrompt(SocialMediaEnums handleName) {
     switch (handleName) {

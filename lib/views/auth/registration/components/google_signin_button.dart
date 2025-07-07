@@ -14,15 +14,13 @@ class GoogleSignInButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        state.mapOrNull(authenticated: (user) {
+        if (state is Authenticated) {
           Navigator.popAndPushNamed(context, dashboardRoute);
-          PreferenceUtils.putString(user_id, user.user['id']);
-        });
+          PreferenceUtils.putString(user_id, state.user['id']);
+        }
       },
       child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: darkColor,
-        ),
+        style: ElevatedButton.styleFrom(backgroundColor: darkColor),
         onPressed: () async {
           context.read<AuthBloc>().add(AuthLogin());
 
@@ -59,17 +57,17 @@ class GoogleSignInButton extends StatelessWidget {
                 image: AssetImage("assets/images/google_logo.png"),
                 height: 30.0,
               ),
-              SizedBox(
-                width: 8,
-              ),
+              SizedBox(width: 8),
               Padding(
                 padding: const EdgeInsets.only(left: 10),
                 child: Text(
                   'Sign in with Google',
-                  style:
-                      kLabelStyle.copyWith(color: secondaryLight, fontSize: 14),
+                  style: kLabelStyle.copyWith(
+                    color: secondaryLight,
+                    fontSize: 14,
+                  ),
                 ),
-              )
+              ),
             ],
           ),
         ),

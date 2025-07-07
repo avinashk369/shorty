@@ -12,13 +12,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   AuthBloc({required this.authRepository}) : super(const AuthState.initial()) {
     on<AuthLogin>(_authLogin);
+    on<TwitterLogin>(_twitterLogin);
     on<AuthLogout>(_logout);
+  }
+
+  /// twitter login
+  Future _twitterLogin(TwitterLogin event, Emitter<AuthState> emit) async {
+    try {
+      UserModel user = await authRepository.twitterLogin();
+      emit(Authenticated(user: {"id": user.id}));
+    } on ServerError catch (error) {
+      emit(AuthError(message: error.errorMessage));
+    } catch (e) {
+      emit(AuthError(message: 'Something went wrong'));
+    }
   }
 
   /// user authentication
   Future _authLogin(AuthLogin evet, Emitter<AuthState> emit) async {
     try {
-      UserModel user = await authRepository.authLogin();
+      UserModel user = await authRepository.googleLogin();
       emit(Authenticated(user: {"id": user.id}));
     } on ServerError catch (error) {
       emit(AuthError(message: error.errorMessage));

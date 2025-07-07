@@ -1,7 +1,7 @@
 part of 'twitter_bloc.dart';
 
 @freezed
-class TwitterEvent with _$TwitterEvent {
+abstract class TwitterEvent with _$TwitterEvent {
   const factory TwitterEvent.connect() = ConnectTwitter;
   const factory TwitterEvent.generateTweet({
     required String goal,

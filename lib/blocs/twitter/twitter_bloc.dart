@@ -10,28 +10,25 @@ part 'twitter_state.dart';
 class TwitterBloc extends Bloc<TwitterEvent, TwitterState> {
   final TwitterRepositoryImpl twitterRepositoryImpl;
   TwitterBloc({required this.twitterRepositoryImpl})
-      : super(const TwitterInitializing()) {
-    on<TwitterEvent>(
-      (event, emit) async {
-        await event.map(
-          connect: (event) async => await _connectTwitter(event, emit),
-          generateTweet: (event) async => await _generateTweets(event, emit),
-        );
-      },
-    );
+    : super(const TwitterInitializing()) {
+    on<ConnectTwitter>(_connectTwitter);
+    on<GenerateTweet>(_generateTweets);
   }
 
   /// generate tweets
   Future _generateTweets(
-      GenerateTweet event, Emitter<TwitterState> emit) async {
+    GenerateTweet event,
+    Emitter<TwitterState> emit,
+  ) async {
     try {
       emit(TwitterLoading());
-      await Future.delayed(const Duration(seconds: 2));
+      // await Future.delayed(const Duration(seconds: 5));
       List<String> tweets = await twitterRepositoryImpl.generateGPTContent(
-          topic: event.topic,
-          style: event.style,
-          persona: event.persona,
-          userInput: event.userInput);
+        topic: event.topic,
+        style: event.style,
+        persona: event.persona,
+        userInput: event.userInput,
+      );
       emit(GeneratedTweets(generatedTweet: tweets, userInput: event.userInput));
     } on ServerError catch (error) {
       emit(TwitterError(message: error.errorMessage));
