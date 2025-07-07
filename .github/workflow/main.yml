@@ -1,0 +1,62 @@
+#- create CI pipeline to test and build flutter application
+#- use keys from the env variable
+#- setup flutter version and build versions
+#- create a release branch to trigger the CI pipeline
+# - once CI is completed using github action then create a CD to deploy the application using fastlane
+
+
+
+
+
+
+
+
+name: Flutter CI/CD
+
+on:
+  push:
+    branches: [ release ]
+  pull_request:
+    branches: [ release ]
+  release:
+    types: [ published ]
+
+# env:
+#   FLUTTER_VERSION: '3.32.4'
+#   JAVA_VERSION: '17'
+
+jobs:
+  test:
+    name: Run Tests & Analysis
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: ${{ env.JAVA_VERSION }}
+    
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: 'stable'
+        cache: true
+        cache-key: 'flutter-:os:-:channel:-:version:-:arch:-:hash:'
+        cache-path: '${{ runner.tool_cache }}/flutter'
+        
+    - name: Get dependencies
+      run: flutter pub get
+      
+    - name: Verify formatting
+      run: dart format --output=none --set-exit-if-changed .
+      
+    - name: Analyze project source
+      run: flutter analyze --fatal-infos
+      
+    - name: Run tests
+      run: flutter test --coverage --test-randomize-ordering-seed random
+  
